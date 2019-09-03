@@ -18,8 +18,10 @@ export default canComponent.extend({
     inserted() {
       this.viewModel.initVM();
     },
-    '{counts} change'(counts, event, name, action, count) {
-      this.viewModel.setWidgetCount(name, count);
+    '{viewModel} counts'(scope, events, counts) {
+      for (const [key, value] of Object.entries(counts)) {
+        this.viewModel.setWidgetCount(key, value);
+      }
     },
   },
 });

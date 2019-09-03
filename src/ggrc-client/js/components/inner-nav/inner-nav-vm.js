@@ -23,13 +23,13 @@ export default canMap.extend({
   define: {
     counts: {
       get() {
-        return getCounts();
+        return getCounts().attr();
       },
     },
     showTabs: {
       get() {
         let counts = this.attr('counts');
-        let isEmptyCounts = isEmptyObject(counts.attr());
+        let isEmptyCounts = isEmptyObject(counts);
         return !isEmptyCounts || isAdmin();
       },
     },
@@ -84,8 +84,8 @@ export default canMap.extend({
     let title = typeof widgetName === 'function'
       ? widgetName() : widgetName;
     let countsName = descriptor.countsName ||
-        descriptor.content_controller_options.countsName ||
-        descriptor.model.model_singular;
+      descriptor.content_controller_options.countsName ||
+      descriptor.model.model_singular;
     let model = this.attr('instance').constructor;
     let forceShowList = model.obj_nav_options.force_show_list || [];
 
@@ -115,10 +115,10 @@ export default canMap.extend({
     let targetType = widget.model.model_singular;
 
     if (this.attr('showAllTabs')
-        || widget.attr('inForceShowList')
-        || widget.attr('type') === 'version'
-        || widget.attr('uncountable')
-        || !allowedToCreateOrMap(instance, targetType)) {
+      || widget.attr('inForceShowList')
+      || widget.attr('type') === 'version'
+      || widget.attr('uncountable')
+      || !allowedToCreateOrMap(instance, targetType)) {
       // widget will never be in hiddenWidgets
       return;
     }
@@ -137,7 +137,7 @@ export default canMap.extend({
   addToHiddenWidgets(widget) {
     let hiddenWidgets = this.attr('hiddenWidgets');
     let hiddenWidget =
-        loFind(hiddenWidgets, (hidden) => hidden.id === widget.id);
+      loFind(hiddenWidgets, (hidden) => hidden.id === widget.id);
 
     if (!hiddenWidget) {
       hiddenWidgets.push(widget);
