@@ -4,7 +4,6 @@
 }}
 
 <div class="hideable-holder">
-{{#instance}}
 <form action="javascript://">
   <input type="hidden" name="kind" value="Directive" />
   {{> /static/templates/base_objects/form_restore.stache}}
@@ -20,7 +19,7 @@
       <input tabindex="1"
              class="input-block-level"
              placeholder="Enter Title"
-             name="title" type="text" value="{{title}}" autofocus>
+             name="title" type="text" value="{{instance.title}}" autofocus>
       {{#instance.computed_errors.title}}<label class="help-inline warning">{{this}}</label>{{/instance.computed_errors.title}}
     </div>
   </div>
@@ -113,7 +112,7 @@
             Code
           </label>
           <a href="javascript://" class="field-hide" tabindex="-1">hide</a>
-          <input disabled class="input-block-level" type="text" value="{{slug}}">
+          <input disabled class="input-block-level" type="text" value="{{instance.slug}}">
         </div>
       {{/if}}
     {{/if}}
@@ -138,5 +137,4 @@
   </div>
 
 </form>
-{{/instance}}
 </div>

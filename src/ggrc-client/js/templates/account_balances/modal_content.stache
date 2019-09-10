@@ -4,7 +4,6 @@
 }}
 
 <div class="hideable-holder">
-{{#instance}}
 <form action="javascript://">
   {{> /static/templates/base_objects/form_restore.stache}}
 
@@ -16,7 +15,7 @@
         <i class="fa fa-asterisk"></i>
         <i class="fa fa-question-circle" rel="tooltip" title="Give new {{model.title_plural}} a name that's easy to search for and indicates the main goals of this {{model.title_singular}}."></i>
       </label>
-      <input tabindex="1" class="input-block-level" placeholder="Enter Title" name="title" type="text" value="{{title}}" autofocus>
+      <input tabindex="1" class="input-block-level" placeholder="Enter Title" name="title" type="text" value="{{instance.title}}" autofocus>
       {{#instance.computed_errors.title}}<label class="help-inline warning">{{this}}</label>{{/instance.computed_errors.title}}
     </div>
   </div>
@@ -45,7 +44,7 @@
   <div class="row">
     <div class="span12 hide-wrap">
       <access-control-list-roles-helper
-        instance:from="{.}"
+        instance:from="instance"
         isNewInstance:from="new_object_form">
       </access-control-list-roles-helper>
     </div>
@@ -90,7 +89,7 @@
           Code
         </label>
         <a href="javascript://" class="field-hide" tabindex="-1">hide</a>
-        <input disabled class="input-block-level" type="text" value="{{slug}}">
+        <input disabled class="input-block-level" type="text" value="{{instance.slug}}">
       </div>
     </div>
   {{/if}}
@@ -112,6 +111,5 @@
     </div>
   </div>
 </form>
-{{/instance}}
 </div>
 

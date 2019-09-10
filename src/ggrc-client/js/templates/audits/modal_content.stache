@@ -4,7 +4,6 @@
 }}
 
 <div class="hideable-holder">
-  {{#instance}}
   <form action="javascript://">
     {{> /static/templates/base_objects/form_restore.stache}}
 
@@ -46,7 +45,7 @@
           <i class="fa fa-asterisk"></i>
           <i class="fa fa-question-circle" rel="tooltip" title="Give new {{model.title_plural}} a name that's easy to search for and indicates the main goals of this {{model.title_singular}}."></i>
         </label>
-        <input class="input-block-level" placeholder="Enter Title" name="title" type="text" value="{{title}}" tabindex="2" autofocus>
+        <input class="input-block-level" placeholder="Enter Title" name="title" type="text" value="{{instance.title}}" tabindex="2" autofocus>
         {{#instance.computed_errors.title}}
           <label class="help-inline warning">
               {{this}}
@@ -69,7 +68,7 @@
     <div class="row-fluid">
       <div class="span12 hide-wrap">
         <access-control-list-roles-helper
-          instance:from="{.}"
+          instance:from="instance"
           isNewInstance:from="new_object_form">
         </access-control-list-roles-helper>
       </div>
@@ -126,16 +125,16 @@
     <div class="row-fluid">
       <div class="span3 hidable">
         <a href="javascript://" class="field-hide" tabindex="-1">hide</a>
-        <datepicker-component date:bind="start_date"
+        <datepicker-component date:bind="instance.start_date"
                     label:from="'Planned Start Date'"
-                    setMaxDate:from="end_date"
+                    setMaxDate:from="instance.end_date"
                     tabindex="20">
         </datepicker-component>
       </div>
       <div class="span3 hidable">
         <a href="javascript://" class="field-hide" tabindex="-1">hide</a>
-        <datepicker-component date:bind="end_date"
-                    setMinDate:from="start_date"
+        <datepicker-component date:bind="instance.end_date"
+                    setMinDate:from="instance.start_date"
                     label:from="'Planned End Date'"
                     tabindex="21">
         </datepicker-component>
@@ -152,14 +151,14 @@
         <a href="javascript://" class="field-hide" tabindex="-1">hide</a>
         <div class="row-fluid">
           <div class="span6">
-            <datepicker-component date:bind="report_start_date"
-                        setMaxDate:from="report_end_date"
+            <datepicker-component date:bind="instance.report_start_date"
+                        setMaxDate:from="instance.report_end_date"
                         tabindex="22">
             </datepicker-component>
           </div>
           <div class="span6">
-            <datepicker-component date:bind="report_end_date"
-                        setMinDate:from="report_start_date">
+            <datepicker-component date:bind="instance.report_end_date"
+                        setMinDate:from="instance.report_start_date">
             </datepicker-component>
           </div>
         </div>
@@ -253,5 +252,4 @@
       </div>
     {{/if}}
   </form>
-  {{/instance}}
 </div>

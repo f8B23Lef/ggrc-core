@@ -2,7 +2,7 @@
     Copyright (C) 2019 Google Inc.
     Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 }}
-
+{{#instance}}
 <gca-controls instance:from="instance"></gca-controls>
 
 <div class="ggrc-form-item">
@@ -10,7 +10,7 @@
     <label class="ggrc-form-item__label">
       Notes
     </label>
-    <rich-text 
+    <rich-text
         tabindex="10"
         hiddenToolbar:from="true"
         placeholder:from="'Enter Notes'"
@@ -24,7 +24,7 @@
     <label class="ggrc-form-item__label">
       Description
     </label>
-    <rich-text 
+    <rich-text
         tabindex="11"
         hiddenToolbar:from="true"
         placeholder:from="'Enter Description'"
@@ -103,3 +103,4 @@
     </div>
   </div>
 </div>
+{{/instance}}

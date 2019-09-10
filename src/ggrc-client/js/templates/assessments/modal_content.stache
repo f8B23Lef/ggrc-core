@@ -5,7 +5,6 @@
 
 <div class="ggrc-form">
   <assessment-modal instance:from="instance" isNewInstance:from="new_object_form">
-    {{#instance}}
   <form action="javascript://">
 
     {{^if new_object_form}}
@@ -64,7 +63,7 @@
         </label>
         <input type="text" tabindex="2"
                class="input-block-level" placeholder="Enter Title"
-               name="title" value:from="title" autofocus>
+               name="title" value:from="instance.title" autofocus>
         {{#instance.computed_errors.title}}<label class="help-inline warning">{{this}}</label>{{/instance.computed_errors.title}}
       </div>
     </div>
@@ -93,7 +92,7 @@
 
     <div class="ggrc-form-item">
       <div class="ggrc-form-item__row ggrc-from-item__checkbox-list">
-        <checkbox-to-list property:from="recipients" instance:from="instance" class="flex-box">
+        <checkbox-to-list property:from="instance.recipients" instance:from="instance" class="flex-box">
           <div class="ggrc-form-item__checkbox-item">
             <label class="input--inline">
                 <input
@@ -275,6 +274,5 @@
     {{/if}}
 
   </form>
-  {{/instance}}
   </assessment-modal>
 </div>
