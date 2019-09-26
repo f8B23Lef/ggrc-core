@@ -20,6 +20,7 @@ from ggrc.models import relationship
 from ggrc.models.mixins import base
 from ggrc.models.mixins import clonable
 from ggrc.models.mixins import issue_tracker
+from ggrc.models.mixins import with_sox_302
 from ggrc.models.exceptions import ValidationError
 from ggrc.models.reflection import AttributeInfo
 from ggrc.models import reflection
@@ -55,6 +56,7 @@ class AssessmentTemplate(assessment.AuditRelationship,
                          mixins.Slugged,
                          mixins.Stateful,
                          clonable.MultiClonable,
+                         with_sox_302.WithSOX302Flow,
                          Indexed,
                          db.Model):
   """A class representing the assessment template entity.
@@ -306,6 +308,7 @@ class AssessmentTemplate(assessment.AuditRelationship,
         "default_people": self.default_people,
         "modified_by": login.get_current_user(),
         "status": self.status,
+        "sox_302_enabled": self.sox_302_enabled,
     }
     assessment_template_copy = AssessmentTemplate(**data)
     db.session.add(assessment_template_copy)
