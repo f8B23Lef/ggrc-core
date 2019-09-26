@@ -3,7 +3,7 @@
     Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 }}
 
-<div class="action-toolbar">
+<div class="action-toolbar action-toolbar-align">
     <div class="action-toolbar__content-item">
       <document-object-list-item instance:from="document"></document-object-list-item>
     </div>

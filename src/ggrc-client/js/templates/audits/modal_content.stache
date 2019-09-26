@@ -164,10 +164,13 @@
           </div>
         </div>
       </div>
-      <div class="span3 hidable">
-        <ggrc-gdrive-folder-picker instance:from="instance" deferred:from="true" tabindex="13"></ggrc-gdrive-folder-picker>
+    </div>
+
+    <div class="row-fluid">
+      <div class="span4 hidable">
+          <ggrc-gdrive-folder-picker instance:from="instance" deferred:from="true" tabindex="13"></ggrc-gdrive-folder-picker>
       </div>
-      <div class="span3 hidable">
+      <div class="span4 hidable">
         <deferred-mapper
           instance:from="instance">
           <related-documents

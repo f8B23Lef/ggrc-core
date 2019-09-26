@@ -97,22 +97,27 @@
                                 Evidence file
                             </div>
                             <object-list items:from="files" emptyMessage:from="noItemsText">
-                                <editable-document-object-list-item document:from="{.}">
-                                  <confirm-edit-action
-                                      on:setEditMode="removeRelatedItem(document, 'files')"
-                                      on:setInProgress="setInProgressState()"
-                                      isEditIconDenied:from="isSemiRestrictedOnStatus"
-                                      instance:from="instance"
-                                      onStateChangeDfd:from="onStateChangeDfd">
-                                         {{#unless isSemiRestrictedOnStatus}}
-                                            <a on:el:click="confirmEdit()">
-                                                <action-toolbar-control>
-                                                  <i class="fa fa-trash"></i>
-                                                </action-toolbar-control>
-                                            </a>
-                                          {{/unless}}
-                                  </confirm-edit-action>
-                                </editable-document-object-list-item>
+                                <item-edit-control document:from="{.}"
+                                    propName:from="'notes'"
+                                    value:from="notes"
+                                    instance:from="instance"
+                                    placeholder="Add optional description"
+                                    isEditIconDenied:from="isSemiRestrictedOnStatus"
+                                    on:removeItem="removeRelatedItem(scope.event.payload, 'files')">
+                                  <a class="item-edit-control__content__link"
+                                     href="{{normalizeLink link}}"
+                                     target="_blank"
+                                     rel="tooltip"
+                                     data-original-title="{{title}}">
+                                    {{title}}
+                                  </a>
+                                  {{#unless editMode}}
+                                    <div class="object-list__item__description">
+                                      {{notes}}
+                                    </div>
+                                  {{/unless}}
+                                  <span class="date">{{localize_date created_at}}</span>
+                                </item-edit-control>
                             </object-list>
                             {{#unless isSemiRestrictedOnStatus}}
                               <confirm-edit-action
@@ -133,22 +138,27 @@
                                 Evidence URL
                             </div>
                             <object-list items:from="urls" emptyMessage:from="noItemsText">
-                                <editable-document-object-list-item document:from="{.}">
-                                    <confirm-edit-action
-                                        on:setEditMode="removeRelatedItem(document, 'urls')"
-                                        on:setInProgress="setInProgressState()"
-                                        isEditIconDenied:from="isSemiRestrictedOnStatus"
-                                        instance:from="instance"
-                                        onStateChangeDfd:from="onStateChangeDfd">
-                                            {{#unless isSemiRestrictedOnStatus}}
-                                              <a on:el:click="confirmEdit">
-                                                  <action-toolbar-control>
-                                                      <i class="fa fa-trash"></i>
-                                                  </action-toolbar-control>
-                                              </a>
-                                            {{/unless}}
-                                    </confirm-edit-action>
-                                </editable-document-object-list-item>
+                              <item-edit-control document:from="{.}"
+                                    propName:from="'notes'"
+                                    value:from="notes"
+                                    instance:from="instance"
+                                    placeholder="Add optional description"
+                                    isEditIconDenied:from="isSemiRestrictedOnStatus"
+                                    on:removeItem="removeRelatedItem(scope.event.payload, 'urls')">
+                                  <a class="item-edit-control__content__link"
+                                     href="{{normalizeLink link}}"
+                                     target="_blank"
+                                     rel="tooltip"
+                                     data-original-title="{{title}}">
+                                    {{title}}
+                                  </a>
+                                  {{#unless editMode}}
+                                    <div class="object-list__item__description">
+                                      {{notes}}
+                                    </div>
+                                  {{/unless}}
+                                  <span class="date">{{localize_date created_at}}</span>
+                              </item-edit-control>
                             </object-list>
                           {{#unless isSemiRestrictedOnStatus}}
                             {{#if urlsEditMode}}
@@ -156,17 +166,19 @@
                                     context:from="instance.context"
                                     on:setEditMode="setUrlEditMode(false)">
                                     <form class="create-form">
-                                        <fieldset class="create-form__layout">
-                                            <input value:bind="value" class="create-form__input" type="text" placeholder="Add URL" spellcheck="false" autocomplete="false">
-                                            <div class="create-form__controls">
-                                                <button type="button" class="create-form__confirm" on:el:click="create">
-                                                    <i class="fa fa-check"></i>
-                                                </button>
-                                                <button type="button" class="create-form__cancel" on:el:click="clear">
-                                                    <i class="fa fa-times"></i>
-                                                </button>
-                                            </div>
-                                        </fieldset>
+                                      <div class="item-edit-control">
+                                        <div class="item-edit-control__content">
+                                          <input value:bind="value" class="create-form__input" type="text" placeholder="Add URL" spellcheck="false" autocomplete="false">
+                                         </div>
+                                         <div class="create-form__controls">
+                                           <button type="button" class="create-form__confirm" on:el:click="create">
+                                               <i class="fa fa-check"></i>
+                                           </button>
+                                           <button type="button" class="create-form__cancel" on:el:click="clear">
+                                               <i class="fa fa-times"></i>
+                                           </button>
+                                         </div>
+                                      </div>
                                     </form>
                                 </create-url>
                             {{else}}

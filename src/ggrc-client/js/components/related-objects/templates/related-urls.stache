@@ -7,6 +7,29 @@
   <content/>
   <div class="related-urls__list">
     <object-list items:bind="urls" emptyMessage:from="emptyMessage" showMore:from="showMore">
+      {{#is(modelType, "Evidence")}}
+        <item-edit-control document:bind="{.}"
+                         propName:from="'notes'"
+                         value:bind="notes"
+                         instance:from="instance"
+                         placeholder="Add optional description"
+                         isEditIconDenied:from="isEditDenied"
+                         on:removeItem=removeUrl(%context)>
+          <a class="item-edit-control__content__link"
+             href="{{normalizeLink link}}"
+             target="_blank"
+             rel="tooltip"
+             data-original-title="{{title}}">
+            {{title}}
+          </a>
+          {{#unless editMode}}
+            <div class="object-list__item__description">
+              {{notes}}
+            </div>
+          {{/unless}}
+          <span class="date">{{localize_date created_at}}</span>
+        </item-edit-control>
+      {{else}}
       <div class="action-toolbar">
         <document-object-list-item
           instance:from="{.}">
@@ -23,28 +46,32 @@
           </div>
         {{/if}}
       </div>
+      {{/is}}
     </object-list>
   </div>
   {{#if canAddUrl}}
     {{#if isFormVisible}}
       <form class="related-urls__create create-form">
-        <fieldset class="create-form__layout"
-          {{#if isDisabled}}disabled{{/if}}>
-          <input el:value:bind="value"
-          class="create-form__input"
-          type="text"
-          placeholder="Add URL"
-          spellcheck="false"
-          autocomplete="false">
-          <div class="create-form__controls">
-            <button type="submit" class="create-form__confirm" on:el:click="submitCreateUrlForm(value)">
-              <i class="fa fa-check"></i>
-            </button>
-            <button type="button" class="create-form__cancel" on:el:click="toggleFormVisibility(false)">
-              <i class="fa fa-times"></i>
-            </button>
-          </div>
-        </fieldset>
+        <div class="item-edit-control">
+          <fieldset {{#if isDisabled}}disabled{{/if}}>
+            <div class="item-edit-control__content">
+               <input el:value:bind="value"
+               class="create-form__input"
+               type="text"
+               placeholder="Add URL"
+               spellcheck="false"
+               autocomplete="false">
+            </div>
+            <div class="create-form__controls">
+              <button type="submit" class="create-form__confirm" on:el:click="submitCreateUrlForm(value)">
+                <i class="fa fa-check"></i>
+              </button>
+              <button type="button" class="create-form__cancel" on:el:click="toggleFormVisibility(false)">
+                <i class="fa fa-times"></i>
+              </button>
+            </div>
+          </fieldset>
+        </div>
       </form>
     {{else}}
       <button type="button"

@@ -51,5 +51,8 @@ export default canComponent.extend({
           });
         });
     },
+    clear: function () {
+      this.dispatch({type: 'setEditMode'});
+    },
   }),
 });

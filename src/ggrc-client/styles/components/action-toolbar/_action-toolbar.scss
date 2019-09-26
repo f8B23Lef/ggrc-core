@@ -46,4 +46,13 @@
     @extend %editable-control-item;
     margin: 0 0 0 8px;
   }
+
+  &__item-control-content {
+    min-width: 0;
+    max-width: 60%;
+  }
+}
+
+.action-toolbar-align{
+  align-items: flex-start;
 }

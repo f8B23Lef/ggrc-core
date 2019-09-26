@@ -28,8 +28,8 @@
             </div>
             <div class="pane-header__toolbar">
               {{#if is_info_pin}}
-                <info-pin-buttons maximized:from="maximized" 
-                                  onChangeMaximizedState:from="@onChangeMaximizedState" 
+                <info-pin-buttons maximized:from="maximized"
+                                  onChangeMaximizedState:from="@onChangeMaximizedState"
                                   onClose:from="@onClose">
                 </info-pin-buttons>
               {{/if}}
@@ -70,7 +70,8 @@
                   isDisabled:from="isLoading"
                   isNotEditable:from="instance.archived"
                   on:createUrl="createRelatedDocument(scope.event.payload)"
-                  on:removeUrl="removeRelatedDocument(scope.event.payload)">
+                  on:removeUrl="removeRelatedDocument(scope.event.payload)"
+                  modelType:from="modelType">
                   <div class="related-urls__heading">
                     <h6 class="related-urls__title">Evidence URL</h6>
                   </div>

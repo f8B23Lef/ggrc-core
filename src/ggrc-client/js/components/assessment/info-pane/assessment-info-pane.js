@@ -36,6 +36,7 @@ import '../../related-objects/related-assessments';
 import '../../related-objects/related-issues';
 import '../../issue-tracker/issue-tracker-switcher';
 import './ticket-id-checker';
+import '../../item-edit-control/item-edit-control';
 import '../../object-list-item/editable-document-object-list-item';
 import '../../object-state-toolbar/object-state-toolbar';
 import '../../loading/loading-status';

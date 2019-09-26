@@ -69,7 +69,9 @@ export default Cacheable.extend({
       {
         attr_title: 'Description',
         attr_name: 'description',
-      }],
+      },
+      {attr_title: 'Notes', attr_name: 'notes'},
+    ],
   },
 }, {
   define: {

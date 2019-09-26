@@ -149,6 +149,42 @@
   }
 }
 
+.item-edit-control {
+  margin-bottom: 16px;
+  width: 60%;
+
+  &__content {
+    padding: 8px 10px;
+    background-color: $white;
+    border-radius: 2px 2px 0 2px;
+    border: 1px solid #ccc;
+    margin: 0;
+
+    &__link {
+      max-width: 100%;
+      font-style: italic;
+      font-size: 13px;
+      display: inline-block;
+      cursor: pointer;
+
+      @include text-overflow();
+    }
+
+    input {
+      box-sizing: border-box;
+      height: 28px;
+      margin: 0;
+      width: 100%;
+    }
+
+    .input-wrapper {
+      input {
+        margin: 4px 0 0;
+      }
+    }
+  }
+}
+
 .comment-object-item {
   display: block;
   margin: 0 16px 30px 0;
@@ -177,8 +213,8 @@
     flex-wrap: wrap;
 
     .comment-object-item__header-author {
-       display: flex;
-       margin-right: 6px;
+      display: flex;
+      margin-right: 6px;
 
       person-data {
         font-size: 11px;

@@ -1,0 +1,46 @@
+{{!
+    Copyright (C) 2019 Google Inc.
+    Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
+}}
+
+{{#if editMode}}
+<div class="item-edit-control">
+  <div class="document-object-item item-edit-control__content">
+    <div class="document-object-item__body">
+      <content></content>
+      <text-form-field value:from="value"
+          placeholder:from="placeholder"
+          on:valueChanged="fieldValueChanged(scope.event)">
+      </text-form-field>
+    </div>
+  </div>
+  <div class="create-form__controls">
+    <button href="javascript://" type="button" class="create-form__confirm" on:el:click="save()">
+      <i class="fa fa-check"></i>
+    </button>
+    <button type="button" class="create-form__cancel" on:el:click="cancel()">
+      <i class="fa fa-times"></i>
+    </button>
+  </div>
+</div>
+{{else}}
+<div class="action-toolbar action-toolbar-align">
+  <div class="action-toolbar__item-control-content">
+    <div class="document-object-item">
+      <div class="document-object-item__body">
+        <content></content>
+      </div>
+    </div>
+  </div>
+  <div class="action-toolbar__controls">
+    {{#unless isEditIconDenied}}
+      <action-toolbar-control on:el:click="setEditMode(scope.event)">
+        <i class="fa fa-pencil-square-o"></i>
+      </action-toolbar-control>
+      <action-toolbar-control on:el:click="remove(document)">
+        <i class="fa fa-trash"></i>
+      </action-toolbar-control>
+    {{/unless}}
+  </div>
+</div>
+{{/if}}

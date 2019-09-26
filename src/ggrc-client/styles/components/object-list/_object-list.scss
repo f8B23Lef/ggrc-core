@@ -78,8 +78,12 @@ object-list {
     padding: 0;
     color: $text;
     min-width: 0;
+    &__description {
+      font-style: italic;
+      word-break: break-word;
+    }
   }
-
+  
   &__item-empty {
     color: #999;
     font-style: italic;

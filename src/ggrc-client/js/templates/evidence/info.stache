@@ -24,6 +24,18 @@
               </div>
 
               {{> /static/templates/base_objects/description.stache}}
+
+              <div class="row-fluid wrap-row">
+                <div class="span12">
+                  <div class="info-pane__section-title">Notes</div>
+                  {{#if instance.notes}}
+                    <div class="info-pane__text">{{instance.notes}}</div>
+                  {{else}}
+                    <span class="empty-message">None</span>
+                  {{/if}}
+                </div>
+              </div>
+
               {{> /static/templates/base_objects/contacts.stache}}
 
               <div class="row-fluid wrap-row">

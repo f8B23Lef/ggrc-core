@@ -63,6 +63,20 @@
         <input disabled class="input-block-level" type="text" value:from="slug">
       </div>
     </div>
+
+    <div class="ggrc-form-item">
+      <div class="ggrc-form-item__row">
+        <label class="ggrc-form-item__label">
+          Notes
+        </label>
+        <input type="text"
+          id="form-field-notes"
+          placeholder="Enter Notes"
+          class="input-block-level"
+          el:value:bind="instance.notes">
+      </div>
+    </div>
+
   </form>
 </div>
 {{/instance}}
