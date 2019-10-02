@@ -1162,6 +1162,62 @@ class TestAssessmentImport(TestCase):
         "text", assessment.custom_attribute_values[0].attribute_value
     )
 
+  def test_asmt_missing_mandatory_gca(self):
+    """"Import asmt with mandatory empty multiselect CAD"""
+    asmt_slug = "TestAssessment"
+    with factories.single_commit():
+      factories.CustomAttributeDefinitionFactory(
+          title="multiselect_GCA",
+          definition_type="assessment",
+          attribute_type="Multiselect",
+          multi_choice_options="1,2,3",
+          mandatory=True,
+      )
+      factories.AssessmentFactory(slug=asmt_slug)
+    response = self.import_data(OrderedDict([
+        ("object_type", "Assessment"),
+        ("Code", asmt_slug),
+        ("multiselect_GCA", ""),
+    ]))
+    expected_response = {
+        "Assessment": {
+            "row_errors": {
+                errors.MISSING_VALUE_ERROR.format(
+                    column_name="multiselect_GCA",
+                    line=3
+                ),
+            },
+        },
+    }
+    self._check_csv_response(response, expected_response)
+
+  def test_asmt_with_multiselect_gca_diff_text(self):
+    """"Import asmt with mandatory diff case text multiselect CAD"""
+    asmt_slug = "TestAssessment"
+    with factories.single_commit():
+      factories.CustomAttributeDefinitionFactory(
+          title="multiselect_GCA",
+          definition_type="assessment",
+          attribute_type="Multiselect",
+          multi_choice_options="Option 1,Option 2,Option 3",
+      )
+
+      # create assessment with 1 CAV
+      asmt = factories.AssessmentFactory(slug=asmt_slug)
+      asmt_id = asmt.id
+    # update given assessment with empty GCA multiselect type
+    response = self.import_data(OrderedDict([
+        ("object_type", "Assessment"),
+        ("Code", asmt_slug),
+        ("multiselect_GCA", "option 1"),
+    ]))
+    self._check_csv_response(response, {})
+    asmt = all_models.Assessment.query.get(asmt_id)
+    self.assertEquals(1, len(asmt.custom_attribute_values))
+    self.assertEquals(
+        "Option 1", asmt.custom_attribute_values[0].attribute_value
+    )
+
   @ddt.data(
       (
           factories.IssueFactory,

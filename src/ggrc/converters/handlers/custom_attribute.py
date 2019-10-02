@@ -166,20 +166,37 @@ class CustomAttributeColumnHandler(handlers.TextColumnHandler):
 
   def get_multiselect_values(self):
     """Get valid value for multiselect fields."""
-    if not self.raw_value:  # empty value
+    if not self.raw_value:
+      if self.mandatory:
+        self.add_error(
+            errors.MISSING_VALUE_ERROR,
+            column_name=self.display_name
+        )
       return None
 
     definition = self.get_ca_definition()
-    choices_set = set(definition.multi_choice_options.lower().split(","))
-    raw_values = set(self.raw_value.lower().split(","))
+    choices_list = definition.multi_choice_options.split(",")
+    choice_map = {choice.lower(): choice for choice in choices_list}
+    is_valid_values = True
+    valid_values = ""
 
-    is_valid_values = raw_values.issubset(choices_set)
-    valid_values = choices_set.intersection(raw_values)
+    for raw_value in self.raw_value.lower().split(","):
+      valid_value = choice_map.get(raw_value)
+      if not valid_value:
+        is_valid_values = False
+        continue
+      valid_values += "{},".format(valid_value)
+
+    valid_values = valid_values.rstrip(",")
 
     if not is_valid_values:
       self.add_warning(errors.WRONG_VALUE, column_name=self.display_name)
-
-    return ",".join(valid_values)
+    if self.mandatory and not valid_values:
+      self.add_error(
+          errors.MISSING_VALUE_ERROR,
+          column_name=self.display_name
+      )
+    return valid_values
 
   def get_dropdown_value(self):
     """Get valid value of the dropdown field."""
