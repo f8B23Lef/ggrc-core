@@ -15,7 +15,7 @@
         on:valueChange="inlineDropdownValueChange(scope.event)">
         <inline-edit-control
           on:inlineSave="checkTicketId(scope.event)"
-          isEditIconDenied:from="isEditDenied"
+          isEditIconDenied:from="isRestricted"
           dropdownOptions:from="instance.constructor.issue_tracker_enable_options"
           instance:from="instance"
           value:from="issueTrackerEnabled"
@@ -65,7 +65,7 @@
       isConfirmationNeeded:from="false"
       setInProgress:from="@setInProgressState"
       onStateChangeDfd:from="onStateChangeDfd"
-      isEditIconDenied:from="isEditDenied"
+      isEditIconDenied:from="isRestricted"
       value:from="instance.issue_tracker.issue_id"
       mandatory:from="isTicketIdMandatory"
       instance:from="instance">
@@ -78,7 +78,7 @@
           </div>
           <div class="ggrc-form-item__small-text">
             <small>
-              {{#if isTicketIdMandatory}} 
+              {{#if isTicketIdMandatory}}
                 <em>You are not allowed to generate new ticket for Issues at statuses &quot;In Review&quot;, &quot;Completed (no verification)&quot;, &quot;Completed and Verified&quot; and &quot;Deprecated&quot;, only manual linking is allowed to perform. If you would like to keep the existing ticket linked to this issue do not edit this attribute. If you would like to link to a different ticket provide an existing ticket number.</em>
               {{else}}
                 <em>Please leave this empty for a new ticket to be generated and linked to this assessment. If you would like to link to an existing ticket please provide the ticket number.</em>
@@ -136,7 +136,7 @@
       setInProgress:from="@setInProgressState"
       onStateChangeDfd:from="onStateChangeDfd"
       dropdownOptions:from="instance.constructor.issue_tracker_priorities"
-      isEditIconDenied:from="isEditDenied"
+      isEditIconDenied:from="isRestricted"
       value:from="instance.issue_tracker.issue_priority"
       instance:from="instance">
         <div class="ggrc-form__title">Ticket Priority</div>
@@ -150,7 +150,7 @@
       setInProgress:from="@setInProgressState"
       onStateChangeDfd:from="onStateChangeDfd"
       dropdownOptions:from="instance.constructor.issue_tracker_severities"
-      isEditIconDenied:from="isEditDenied"
+      isEditIconDenied:from="isRestricted"
       value:from="instance.issue_tracker.issue_severity"
       instance:from="instance">
         <div class="ggrc-form__title">Ticket Severity</div>
@@ -165,7 +165,7 @@
       isConfirmationNeeded:from="false"
       setInProgress:from="@setInProgressState"
       onStateChangeDfd:from="onStateChangeDfd"
-      isEditIconDenied:from="isEditDenied"
+      isEditIconDenied:from="isRestricted"
       value:from="instance.issue_tracker.title"
       instance:from="instance">
         <div class="ggrc-form__title form-label form-label__extended">
