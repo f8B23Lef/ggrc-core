@@ -211,6 +211,7 @@ class CustomAttributeDefinition(CustomAttributeDefinitionBase):
     COMMENT_REQUIRED = 0b001
     EVIDENCE_REQUIRED = 0b010
     URL_REQUIRED = 0b100
+    IS_NEGATIVE = 0b1000
 
   VALID_TYPES = {
       "Text": "Text",
@@ -270,6 +271,28 @@ class CustomAttributeDefinition(CustomAttributeDefinitionBase):
     else:
       self.definition_type = ''
     return setattr(self, self.definition_attr, value)
+
+  @property
+  def negative_options(self):
+    """Get list of negative options of this CAD.
+
+    Return list of negative options of CAD this property is called on. CAD
+    option is considered to be a negative one when it has appropriate bitmask
+    in `multi_choice_mandatory` field. This field stores bitmasks for each
+    option in comma-separated manner. It means that first bitmask is related to
+    first option in `multi_choice_options`, second bitmask to second option and
+    so on. Option is negative when binary AND of its bitmask and `IS_NEGATIVE`
+    from `MultiChoiceMandatoryFlags` enum evaluates to True.
+
+    Returns:
+      List of options that are marked as negative ones.
+    """
+    bitmasks = self.multi_choice_mandatory.split(",")
+    options = self.multi_choice_options.split(",")
+    return [
+        option for option, bitmask in zip(options, bitmasks)
+        if int(bitmask) & self.MultiChoiceMandatoryFlags.IS_NEGATIVE
+    ]
 
   def _clone(self, target):
     """Clone custom attribute definitions."""

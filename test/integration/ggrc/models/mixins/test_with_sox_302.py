@@ -1,6 +1,8 @@
 # Copyright (C) 2019 Google Inc.
 # Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 
+# pylint: disable=protected-access
+
 """Integration tests for `WithSOX302Flow` logic."""
 
 import collections
@@ -43,22 +45,48 @@ class BaseTestWithSOX302(integration_tests_ggrc.TestCase):
     return obj_type.query.filter(obj_type.audit_id == audit.id)
 
   @staticmethod
-  def _get_query_to_refresh(obj):
-    # type: (db.Model, models.Audit) -> sqlalchemy.Query
+  def _get_query_to_refresh(*objs):
+    # type: (Tuple[db.Model]) -> sqlalchemy.Query
     """Build sqlalchemy query for the given object to use it later.
 
-    Build sqlalchemy query for the given object. This helper method allows to
-    build DB query when object ID is known and it isn't detached from a session
-    yet and use this query later when object might become detached from a
-    session to refresh it.
+    Build sqlalchemy query for the given objects. This helper method allows to
+    build DB query when object IDs are known and they aren't detached from a
+    session yet and use this query later when object might become detached from
+    a session to refresh it.
 
     Args:
-        obj (db.Model): Instance of db.Model class represeting object to query.
+        objs (Tuple[db.Model]): Instances of db.Model class represeting object
+          to query from DB.
 
     Returns:
       Sqlalchemy.Query object which could be used for later queries.
     """
-    return obj.__class__.query.filter(obj.__class__.id == obj.id)
+    if not objs:
+      return None
+
+    model = objs[0].__class__
+    return model.query.filter(model.id.in_(o.id for o in objs))
+
+  @staticmethod
+  def _get_asmt_tmpl_lcas(assessment_template):
+    # type: (model.AssessmentTemplate) -> List[model.CustomAttributeDefinition]
+    """Return list of local CADs of AssessmentTemplate.
+
+    Return list of local CustomAttributeDefinition instances related to the
+    given AssessmentTemplate.
+
+    Args:
+      assessment_template (model.AssessmentTemplate): Assessment template whose
+        local custom attributes should be queried from DB.
+
+    Returns:
+      List of CustomAttributeDefinition instances.
+    """
+    cad = all_models.CustomAttributeDefinition
+    return cad.query.filter(
+        cad.definition_type == assessment_template._inflector.table_singular,
+        cad.definition_id == assessment_template.id,
+    ).all()
 
   def _assert_sox_302_enabled_flag(self, obj, expected_value):
     # type: (db.Model, bool) -> None
@@ -80,6 +108,30 @@ class BaseTestWithSOX302(integration_tests_ggrc.TestCase):
         obj.sox_302_enabled,
         expected_value,
     )
+
+  def _assert_negative_options(self, cads, expected_cad_count,
+                               expected_options, expected_negatives):
+    # type: (List[model.CustomAttributeDefinition], int, list, list) -> None
+    """Assert that provided CADs have correct negative options.
+
+    For this assertion to pass, following conditions should be met:
+      - Number of CADs should match with `expected_cad_count`;
+      - Options of each CAD should match with options from `expected_options`;
+      - Options from `expected_negatives` should be negative ones on CAD;
+
+    Args:
+      cads (List[model.CustomAttributeDefinition]): List of CADs whoose options
+        should be checked.
+      expected_cad_count (int): Expected number of CADs.
+      expected_options (List[str]): List of expected options for each CAD.
+      expected_negatives (List[str]): List of expected negative options for
+        each CAD.
+    """
+    self.assertEqual(expected_cad_count, len(cads))
+    for item in zip(cads, expected_options, expected_negatives):
+      lca, exp_options, exp_negatives = item
+      self.assertEqual(exp_options, lca.multi_choice_options)
+      self.assertIn(exp_negatives, lca.negative_options)
 
 
 @ddt.ddt
@@ -147,6 +199,138 @@ class TestImportWithSOX302(BaseTestWithSOX302):
     self._assert_sox_302_enabled_flag(
         tmpl_q.one(),
         exp_value,
+    )
+
+  @ddt.data(
+      {
+          "lca_to_import": "Dropdown, LCA with negative, yes, (n)no",
+          "expected_options": ["yes,no"],
+          "expected_negatives": ["no"],
+          "expected_lca_count": 1,
+      },
+      {
+          "lca_to_import": "Rich Text, LCA with negative, empty, (n)not empty",
+          "expected_options": ["empty,not empty"],
+          "expected_negatives": ["not empty"],
+          "expected_lca_count": 1,
+      },
+      {
+          "lca_to_import": "Text, LCA with negative, (n)empty, not empty",
+          "expected_options": ["empty,not empty"],
+          "expected_negatives": ["empty"],
+          "expected_lca_count": 1,
+      },
+  )
+  @ddt.unpack
+  def test_negative_lca_create(self, lca_to_import, expected_options,
+                               expected_negatives, expected_lca_count):
+    """Test LCA with negative options is created when create tmpl via import.
+
+    Test that local Custom Attribute with negative options is created when
+    creating new Assessment Template via import.
+    """
+    audit = ggrc_factories.AuditFactory()
+    tmpl_q = self._get_query_by_audit_for(
+        obj_type=all_models.AssessmentTemplate,
+        audit=audit,
+    )
+
+    asmt_tmpl_data = collections.OrderedDict([
+        ("object_type", "Assessment Template"),
+        ("Code*", ""),
+        ("Audit*", audit.slug),
+        ("Title*", "AssessmentTemplate Title"),
+        ("Default Assessment Type*", "Control"),
+        ("Default Assignees*", "Auditors"),
+        ("Custom Attributes", lca_to_import),
+    ])
+
+    self._login()
+    response = self.import_data(asmt_tmpl_data)
+
+    self._check_csv_response(response, {})
+    tmpl = tmpl_q.one()
+    self._assert_negative_options(
+        cads=self._get_asmt_tmpl_lcas(tmpl),
+        expected_cad_count=expected_lca_count,
+        expected_options=expected_options,
+        expected_negatives=expected_negatives,
+    )
+
+  @ddt.data(
+      {
+          "lca_to_import": "Dropdown, LCA with negative, yes, (n)no",
+          "expected_options": ["yes,no"],
+          "expected_negatives": ["no"],
+          "expected_lca_count": 1,
+      },
+      {
+          "lca_to_import": "Rich Text, LCA with negative, empty, (n)not empty",
+          "expected_options": ["empty,not empty"],
+          "expected_negatives": ["not empty"],
+          "expected_lca_count": 1,
+      },
+      {
+          "lca_to_import": "Text, LCA with negative, (n)empty, not empty",
+          "expected_options": ["empty,not empty"],
+          "expected_negatives": ["empty"],
+          "expected_lca_count": 1,
+      },
+  )
+  @ddt.unpack
+  def test_negative_lca_update(self, lca_to_import, expected_options,
+                               expected_negatives, expected_lca_count):
+    """Test LCA with negative options is created when update via import.
+
+    Check that local Custom Attribute with negative options is created and all
+    previous attached local Custom Attributes are deleted when updating
+    Assessment Template via import.
+    """
+    with ggrc_factories.single_commit():
+      tmpl = ggrc_factories.AssessmentTemplateFactory()
+      lca_1 = ggrc_factories.CustomAttributeDefinitionFactory(
+          title="Dropdown LCA with no negatives to be deleted",
+          definition_type=tmpl._inflector.table_singular,
+          definition_id=tmpl.id,
+          attribute_type="Dropdown",
+          multi_choice_options="yes,no",
+          multi_choice_mandatory="0,0",
+      )
+      lca_2 = ggrc_factories.CustomAttributeDefinitionFactory(
+          title="Rich Text LCA with negatives to be deleted",
+          definition_type=tmpl._inflector.table_singular,
+          definition_id=tmpl.id,
+          attribute_type="Rich Text",
+          multi_choice_options="empty,not empty",
+          multi_choice_mandatory="0,8",
+      )
+      lca_3 = ggrc_factories.CustomAttributeDefinitionFactory(
+          title="Text LCA with negatives to be deleted",
+          definition_type=tmpl._inflector.table_singular,
+          definition_id=tmpl.id,
+          attribute_type="Text",
+          multi_choice_options="empty,not empty",
+          multi_choice_mandatory="8,0",
+      )
+    tmpl_q = self._get_query_to_refresh(tmpl)
+    old_cads_q = self._get_query_to_refresh(lca_1, lca_2, lca_3)
+    asmt_tmpl_data = collections.OrderedDict([
+        ("object_type", "Assessment Template"),
+        ("Code*", tmpl.slug),
+        ("Custom Attributes", lca_to_import),
+    ])
+
+    self._login()
+    response = self.import_data(asmt_tmpl_data)
+
+    self._check_csv_response(response, {})
+    tmpl = tmpl_q.one()
+    self.assertEqual(old_cads_q.all(), [])
+    self._assert_negative_options(
+        cads=self._get_asmt_tmpl_lcas(tmpl),
+        expected_cad_count=expected_lca_count,
+        expected_options=expected_options,
+        expected_negatives=expected_negatives,
     )
 
 

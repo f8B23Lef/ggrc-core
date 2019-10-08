@@ -44,7 +44,8 @@ class TemplateCaColumnHandler(handlers.ColumnHandler):
       ca_type = ca_type[10:].strip()
     return ca_type, mandatory
 
-  def _get_multiple_choice(self, choices):
+  @staticmethod
+  def _get_multiple_choice(choices):
     """Get option and mandatory strings for a list of choices."""
     options = []
     mandatory = []
@@ -54,7 +55,9 @@ class TemplateCaColumnHandler(handlers.ColumnHandler):
         man += 1
       if "(a)" in option.lower():
         man += 2
-      options.append(re.sub("\([aAcC]\)", "", option).strip())
+      if "(n)" in option.lower():
+        man += 8
+      options.append(re.sub(r"\([aAcCnN]\)", "", option).strip())
       mandatory.append(str(man))
     return ",".join(options), ",".join(mandatory)
 

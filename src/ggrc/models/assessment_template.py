@@ -251,10 +251,19 @@ class AssessmentTemplate(assessment.AuditRelationship,
               "and trailing spaces are ignored.\n"
               "list of attribute values: Comma separated list, only used if "
               "attribute type is 'Dropdown'. Prepend '(a)' if the value has a "
-              "mandatory attachment and/or (c) if the value requires a "
+              "mandatory attachment and/or '(c)' if the value requires a "
               "mandatory comment.\n\n"
-              "Limitations: Dropdown values can not start with either '(a)' or"
-              "'(c)' and attribute names can not contain commas ','."
+              "list of attribute values (only if 'SOX 302 Assessment "
+              "workflow' = YES):\n"
+              "- for Dropdown: Comma separated list. Prepend '(a)' if the "
+              "value has a mandatory attachment and/or '(c)' if the value "
+              "requires a mandatory comment and/or '(n)' if the value should "
+              "be treated as negative answer.\n"
+              "- for Text and Reach text: options possible are 'Not empty' or "
+              "'Empty'. Prepend '(n)' if the value should be treated as "
+              "negative answer.\n\n"
+              "Limitations: Dropdown values can not start with either '(a)', "
+              "'(c)' or '(n)' and attribute names can not contain commas ','."
           ),
       },
   }
