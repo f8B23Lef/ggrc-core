@@ -147,6 +147,35 @@
       </div>
     </div>
 
+    <div class="sox-302-enabled">
+      <div class="row-fluid hidable sox-302-enabled__checkbox-content">
+        <label class="sox-302-label">
+          <input type="checkbox"
+            class="sox-302-label__checkbox"
+            el:checked:bind="instance.sox_302_enabled"/>
+              Enable SOX 302 assessment workflow
+        </label>
+        <i class="fa fa-question-circle sox-302-icon"
+          rel="tooltip"
+          title="SOX 302 assessment workflow enables:
+            - Autocomplete for positive responses (skip verification).">
+        </i>
+      </div>
+
+      {{#if instance.sox_302_enabled}}
+        <div class="row-fluid hidable">
+          <div class="alert alert-nomargin sox-302-enabled__note">
+            <p>
+              By checking this checkbox:
+              <p>
+                - Verification step will be skipped if only positive answers are given for the assessment. Specify negative answers below.
+              </p>
+            </p>
+          </div>
+        </div>
+      {{/if}}
+    </div>
+
     <div class="spacing-top row-fluid hidable">
       <label>Custom Attributes</label>
       <div class="row-fluid">
