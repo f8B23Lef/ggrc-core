@@ -18,7 +18,7 @@ Copyright (C) 2019 Google Inc.
         isLoading:from="isLoading"
         instance:from="instance"
         value:from="instance.title"
-        isEditIconDenied:from="isEditDenied">
+        isEditIconDenied:from="isReadOnlyAttribute('title')">
           {{#unless editMode}}
             <confirm-edit-action
               on:setEditMode="setEditModeInline(scope.event)"
@@ -71,9 +71,9 @@ Copyright (C) 2019 Google Inc.
       <div class="info-pane-utility">
         <three-dots-menu>
           {{#is_allowed 'update' instance context='for'}}
-            {{^if instance.archived}}
+            {{^if_edit_is_denied instance}}
               {{> /static/templates/base_objects/edit_object_link.stache}}
-            {{/if}}
+            {{/if_edit_is_denied}}
           {{/is_allowed}}
           <li>
             <permalink-component instance:from="instance"/>
@@ -102,7 +102,7 @@ Copyright (C) 2019 Google Inc.
           {{#if_in instance.status "Not Started,In Progress"}}
             {{#is_allowed 'update' instance context='for'}}
               <li>
-                {{#unless instance.archived}}
+                {{^if_edit_is_denied instance}}
                   <reminder-component
                     instance:from="instance"
                     type:from="statusToPerson"
@@ -113,13 +113,13 @@ Copyright (C) 2019 Google Inc.
                         Send reminder to assignees
                       </a>
                   </reminder-component>
-                {{/unless}}
+                {{/if_edit_is_denied}}
               </li>
             {{/is_allowed}}
           {{/if_in}}
 
           {{#is_allowed 'update' instance context='for'}}
-            {{^if instance.archived}}
+            {{^if_edit_is_denied instance}}
               <li>
                 {{^is(instance.status, "Rework Needed")}}
                   {{#is(instance.status, "Deprecated")}}
@@ -153,20 +153,20 @@ Copyright (C) 2019 Google Inc.
                   </object-change-state>
                 {{/is}}
               </li>
-            {{/if}}
+            {{/if_edit_is_denied}}
           {{/is_allowed}}
 
           {{#is_allowed 'delete' instance}}
-            {{^if instance.archived}}
-              <li>
-                <a data-toggle="modal-ajax-deleteform" data-object-plural="{{model.table_plural}}"
-                  data-object-singular="{{model.model_singular}}" data-modal-reset="reset"
-                  data-modal-class="modal" data-object-id="{{instance.id}}" href="javascript://">
-                  <i class="fa fa-trash"></i>
-                  Delete
-                </a>
-              </li>
-            {{/if}}
+            {{^if_edit_is_denied instance}}
+               <li>
+                 <a data-toggle="modal-ajax-deleteform" data-object-plural="{{model.table_plural}}"
+                   data-object-singular="{{model.model_singular}}" data-modal-reset="reset"
+                   data-modal-class="modal" data-object-id="{{instance.id}}" href="javascript://">
+                   <i class="fa fa-trash"></i>
+                   Delete
+                 </a>
+               </li>
+            {{/if_edit_is_denied}}
           {{/is_allowed}}
         </three-dots-menu>
 

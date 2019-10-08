@@ -24,7 +24,7 @@
                                 class="width-100"
                                 setInProgress:from="@setInProgressState"
                                 onStateChangeDfd:from="onStateChangeDfd"
-                                isEditIconDenied:from="isEditDenied"
+                                isEditIconDenied:from="isReadOnlyAttribute('test_plan')"
                                 value:from="instance.test_plan"
                                 instance:from="instance">
                                     <div class="info-pane__section-title">Assessment Procedure</div>
@@ -47,14 +47,14 @@
                                 {{assessmentTypeNamePlural}}
                             </div>
                             {{#if isAllowedToMap}}
-                                {{#unless isEditDenied}}
+                                {{#unless isRestricted}}
                                     <div class="action-toolbar__controls">
                                         <action-toolbar-control>
                                             <map-button-using-assessment-type instance:from="instance">
                                                 <confirm-edit-action
                                                     on:setEditMode="openMapper()"
                                                     on:setInProgress="setInProgressState()"
-                                                    isEditIconDenied:from="isEditDenied"
+                                                    isEditIconDenied:from="isRestricted"
                                                     instance:from="instance"
                                                     onStateChangeDfd:from="onStateChangeDfd"
                                                     editMode:from="editMode">
@@ -98,38 +98,40 @@
                                 Evidence file
                             </div>
                             <object-list items:from="files" emptyMessage:from="noItemsText">
-                                <item-edit-control document:from="{.}"
-                                    propName:from="'notes'"
-                                    value:from="notes"
-                                    instance:from="instance"
-                                    placeholder="Add optional description"
-                                    isEditIconDenied:from="isEditDenied"
-                                    on:removeItem="removeRelatedItem(scope.event.payload, 'files')">
-                                  <a class="item-edit-control__content__link"
-                                     href="{{normalizeLink link}}"
-                                     target="_blank"
-                                     rel="tooltip"
-                                     data-original-title="{{title}}">
-                                    {{title}}
-                                  </a>
-                                  {{#unless editMode}}
-                                    <div class="object-list__item__description">
-                                      {{notes}}
-                                    </div>
-                                  {{/unless}}
-                                  <span class="date">{{localize_date created_at}}</span>
-                                </item-edit-control>
+                              <item-edit-control document:from="{.}"
+                                  propName:from="'notes'"
+                                  value:from="notes"
+                                  instance:from="instance"
+                                  placeholder="Add optional description"
+                                  isEditIconDenied:from="isSemiRestrictedOnStatus"
+                                  on:removeItem="removeRelatedItem(scope.event.payload, 'files')">
+                                <a class="item-edit-control__content__link"
+                                   href="{{normalizeLink link}}"
+                                   target="_blank"
+                                   rel="tooltip"
+                                   data-original-title="{{title}}">
+                                  {{title}}
+                                </a>
+                                {{#unless editMode}}
+                                  <div class="object-list__item__description">
+                                    {{notes}}
+                                  </div>
+                                {{/unless}}
+                                <span class="date">{{localize_date created_at}}</span>
+                              </item-edit-control>
                             </object-list>
-                            <confirm-edit-action
-                                        on:setInProgress="setInProgressState()"
-                                        instance:from="instance"
-                                        onStateChangeDfd:from="onStateChangeDfd"
-                                        editMode:from="editMode">
-                            <attach-button
-                                        isAttachActionDisabled:from="isUpdatingFiles"
-                                        confirmationCallback:from="@confirmEdit"
-                                        instance:from="instance"></attach-button>
-                            </confirm-edit-action>
+                            {{#unless isSemiRestrictedOnStatus}}
+                              <confirm-edit-action
+                                          on:setInProgress="setInProgressState()"
+                                          instance:from="instance"
+                                          onStateChangeDfd:from="onStateChangeDfd"
+                                          editMode:from="editMode">
+                              <attach-button
+                                          isAttachActionDisabled:from="isUpdatingFiles"
+                                          confirmationCallback:from="@confirmEdit"
+                                          instance:from="instance"></attach-button>
+                              </confirm-edit-action>
+                            {{/unless}}
                         </div>
                         <div>
                             <div class="info-pane__section-title_spinnerable">
@@ -142,7 +144,7 @@
                                     value:from="notes"
                                     instance:from="instance"
                                     placeholder="Add optional description"
-                                    isEditIconDenied:from="isEditDenied"
+                                    isEditIconDenied:from="isSemiRestrictedOnStatus"
                                     on:removeItem="removeRelatedItem(scope.event.payload, 'urls')">
                                   <a class="item-edit-control__content__link"
                                      href="{{normalizeLink link}}"
@@ -158,8 +160,8 @@
                                   {{/unless}}
                                   <span class="date">{{localize_date created_at}}</span>
                               </item-edit-control>
-                          </object-list>
-                          {{#unless isEditDenied}}
+                            </object-list>
+                          {{#unless isSemiRestrictedOnStatus}}
                             {{#if urlsEditMode}}
                                 <create-url
                                     context:from="instance.context"
@@ -184,7 +186,7 @@
                                 <confirm-edit-action
                                     on:setEditMode="setUrlEditMode(true)"
                                     on:setInProgress="setInProgressState()"
-                                    isEditIconDenied:from="isEditDenied"
+                                    isEditIconDenied:from="isSemiRestrictedOnStatus"
                                     instance:from="instance"
                                     onStateChangeDfd:from="onStateChangeDfd">
                                         <button type="button" class="btn btn-small btn-gray"
@@ -243,7 +245,8 @@
                       mainRoles:from="assessmentMainRoles"
                       deferredSave:from="deferredSave"
                       onStateChangeDfd:from="onStateChangeDfd"
-                      setInProgress:from="@setInProgressState">
+                      setInProgress:from="@setInProgressState"
+                      isReadonly:from="isRestricted">
                     </assessment-people>
                 </div>
             </div>
@@ -257,7 +260,7 @@
                          withReadMore:from="true"
                          setInProgress:from="@setInProgressState"
                          onStateChangeDfd:from="onStateChangeDfd"
-                         isEditIconDenied:from="isEditDenied"
+                         isEditIconDenied:from="isReadOnlyAttribute('start_date')"
                          value:from="instance.start_date"
                          instance:from="instance">
                              <div class="info-pane__section-title">Due Date</div>
@@ -271,7 +274,7 @@
                         propName:from="'labels'"
                         isConfirmationNeeded:from="false"
                         onStateChangeDfd:from="onStateChangeDfd"
-                        isEditIconDenied:from="isEditDenied"
+                        isEditIconDenied:from="isReadOnlyAttribute('labels')"
                         value:from="instance.labels"
                         instance:from="instance">
                             <div class="info-pane__section-title">Label</div>
@@ -314,7 +317,7 @@
             {{#instance}}
                 <related-assessments
                     instance:from="instance"
-                    needReuse:from="true"
+                    needReuse:from="isReuseNeeded"
                     on:reusableObjectsCreated="addReusableEvidence(scope.event)">
                 </related-assessments>
             {{/instance}}
@@ -336,11 +339,12 @@
               <div class="assessment-attributes-panel">
                 <custom-roles excludeRoles:from="assessmentMainRoles"
                     instance:from="instance"
-                    deferredSave:from="deferredSave">
+                    deferredSave:from="deferredSave"
+                    readOnly:from="isRestricted">
                 </custom-roles>
                 <assessment-custom-attributes on:onUpdateAttributes="saveGlobalAttributes(scope.event)"
                                               items:from="globalAttributes"
-                                              isEditDenied:from="isEditDenied"
+                                              isEditDenied:from="isRestricted"
                                               class="ggrc-form ggrc-form-multiple-columns">
                 </assessment-custom-attributes>
                 <div class="info-pane__section ggrc-form">
@@ -355,7 +359,7 @@
                                 setInProgress:from="@setInProgressState"
                                 onStateChangeDfd:from="onStateChangeDfd"
                                 dropdownOptionsGroups:from="objectTypes"
-                                isEditIconDenied:from="isEditDenied"
+                                isEditIconDenied:from="isReadOnlyAttribute('assessment_type')"
                                 value:from="instance.assessment_type"
                                 instance:from="instance">
                                     <div class="ggrc-form__title">Assessment Type</div>
@@ -368,14 +372,14 @@
                        <div class="action-toolbar">
                           <div class="action-toolbar__content-item">Related Information</div>
                             {{#if isAllowedToMap}}
-                                {{#unless isEditDenied}}
+                                {{#unless isRestricted}}
                                     <div class="action-toolbar__controls">
                                         <action-toolbar-control>
                                             <map-button-using-assessment-type instance:from="instance">
                                                 <confirm-edit-action
                                                     on:setEditMode="openMapper()"
                                                     on:setInProgress="setInProgressState()"
-                                                    isEditIconDenied:from="isEditDenied"
+                                                    isEditIconDenied:from="isRestricted"
                                                     instance:from="instance"
                                                     onStateChangeDfd:from="onStateChangeDfd"
                                                     editMode:from="editMode">
@@ -406,7 +410,7 @@
                         withReadMore:from="true"
                         setInProgress:from="@setInProgressState"
                         onStateChangeDfd:from="onStateChangeDfd"
-                        isEditIconDenied:from="isEditDenied"
+                        isEditIconDenied:from="isReadOnlyAttribute('description')"
                         value:from="instance.description"
                         instance:from="instance">
                             <div class="ggrc-form__title">Description</div>
@@ -422,7 +426,7 @@
                         withReadMore:from="true"
                         setInProgress:from="@setInProgressState"
                         onStateChangeDfd:from="onStateChangeDfd"
-                        isEditIconDenied:from="isEditDenied"
+                        isEditIconDenied:from="isReadOnlyAttribute('notes')"
                         value:from="instance.notes"
                         instance:from="instance">
                             <div class="ggrc-form__title">Notes</div>
@@ -441,7 +445,7 @@
                             setInProgress:from="@setInProgressState"
                             onStateChangeDfd:from="onStateChangeDfd"
                             dropdownOptions:from="model.conclusions"
-                            isEditIconDenied:from="isEditDenied"
+                            isEditIconDenied:from="isReadOnlyAttribute('design')"
                             value:from="instance.design"
                             instance:from="instance">
                                 <div>
@@ -461,7 +465,7 @@
                             setInProgress:from="@setInProgressState"
                             onStateChangeDfd:from="onStateChangeDfd"
                             dropdownOptions:from="model.conclusions"
-                            isEditIconDenied:from="isEditDenied"
+                            isEditIconDenied:from="isReadOnlyAttribute('operationally')"
                             value:from="instance.operationally"
                             instance:from="instance">
                                 <div>

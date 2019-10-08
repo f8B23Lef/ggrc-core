@@ -210,6 +210,27 @@ export default canComponent.extend({
           return !!audit && isAllowedFor('read', audit);
         },
       },
+      isRestricted: {
+        get: function () {
+          return this.attr('isEditDenied')
+            || this.attr('instance.is_sox_restricted');
+        },
+      },
+      isSemiRestrictedOnStatus: {
+        get: function () {
+          const semiRestrictedStatuses = ['Deprecated', 'Completed'];
+          const isSemiRestrictedStatus = semiRestrictedStatuses
+            .includes(this.attr('instance.status'))
+            && this.attr('instance.is_sox_restricted');
+
+          return this.attr('isEditDenied') || isSemiRestrictedStatus;
+        },
+      },
+      isReuseNeeded: {
+        get: function () {
+          return !this.attr('isSemiRestrictedOnStatus');
+        },
+      },
       instance: {},
       isInfoPaneSaving: {
         get: function () {
@@ -226,6 +247,11 @@ export default canComponent.extend({
             this.attr('isAssessmentSaving');
         },
       },
+      noItemsText: {
+        get: function () {
+          return this.attr('isSemiRestrictedOnStatus') ? 'None' : '';
+        },
+      },
     },
     modal: {
       state: {
@@ -239,7 +265,6 @@ export default canComponent.extend({
     isAssessmentSaving: false,
     onStateChangeDfd: {},
     formState: {},
-    noItemsText: '',
     currentState: '',
     previousStatus: undefined,
     initialState: 'Not Started',
@@ -261,6 +286,15 @@ export default canComponent.extend({
     },
     setInProgressState: function () {
       this.onStateChange({state: 'In Progress', undo: false});
+    },
+    isReadOnlyAttribute: function (propName) {
+      const readOnlyAttributes = this.attr('instance.get_read_only_fields');
+      const isEditDenied = this.attr('isEditDenied');
+      if (readOnlyAttributes) {
+        const isReadOnly = [...readOnlyAttributes].includes(propName);
+        return isReadOnly || isEditDenied;
+      }
+      return isEditDenied;
     },
     getQuery: function (type, sortObj, additionalFilter) {
       let relevantFilters = [{
