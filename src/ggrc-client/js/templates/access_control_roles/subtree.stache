@@ -10,7 +10,22 @@
   {{#instance}}
   <td>{{name}}</td>
   <td>{{#if read}}Yes{{else}}No{{/if}}</td>
-  <td>{{#if update}}Yes{{else}}No{{/if}}</td>
+  <td>
+    {{#if update}}
+      Yes
+     {{else}}
+      No
+    {{/if}}
+    {{#eq(instance.object_type, "Assessment")}}
+      {{#eq(instance.name, "Assignees")}}
+        <i class="fa fa-question-circle" rel="tooltip"
+            title="For assessments with enabled SOX 302 flow assignees:
+                  - can provide/edit answers for local custom attributes;
+                  - cannot edit assessment and its local custom attributes upon assessment completion.">
+        </i>
+      {{/eq}}
+    {{/eq}}
+  </td>
   <td>{{#if delete}}Yes{{else}}No{{/if}}</td>
   <td>
     <ul class="tree-action-list">
