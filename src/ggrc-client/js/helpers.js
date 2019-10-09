@@ -759,15 +759,7 @@ canStache.registerHelper('displayCount', (countObserver) => {
   }
 });
 
-canStache.registerHelper('if_sox302_restricted', function (instance, options) {
-  const isSox302Restricted = isFunction(instance)
-    ? instance().is_sox_restricted
-    : instance.is_sox_restricted;
-
-  return isSox302Restricted ? options.fn(this) : options.inverse(this);
-});
-
-canStache.registerHelper('if_edit_is_denied', (instance, options) => {
+canStache.registerHelper('is_edit_denied', (instance, options) => {
   const source = isFunction(instance) ? instance(): instance;
   const isEditDenied = source.archived || source.is_sox_restricted;
 

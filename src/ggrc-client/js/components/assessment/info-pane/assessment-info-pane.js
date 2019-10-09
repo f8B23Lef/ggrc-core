@@ -290,11 +290,8 @@ export default canComponent.extend({
     isReadOnlyAttribute: function (propName) {
       const readOnlyAttributes = this.attr('instance.get_read_only_fields');
       const isEditDenied = this.attr('isEditDenied');
-      if (readOnlyAttributes) {
-        const isReadOnly = [...readOnlyAttributes].includes(propName);
-        return isReadOnly || isEditDenied;
-      }
-      return isEditDenied;
+      const isReadOnly = [...readOnlyAttributes].includes(propName);
+      return isReadOnly || isEditDenied;
     },
     getQuery: function (type, sortObj, additionalFilter) {
       let relevantFilters = [{

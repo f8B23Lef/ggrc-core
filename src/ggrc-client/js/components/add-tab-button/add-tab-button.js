@@ -34,6 +34,7 @@ const viewModel = canMap.extend({
         return !this.attr('isAuditInaccessibleAssessment')
           && isAllowedFor('update', instance)
           && !instance.attr('archived')
+          && !instance.attr('is_sox_restricted')
           && !isMyWork()
           && !isAllObjects()
           && this.attr('widgetList.length') > 0;

@@ -5,13 +5,13 @@
 
 <three-dots-menu>
     {{#is_allowed 'update' instance context='for'}}
-      {{^if instance.archived}}
+      {{^is_edit_denied instance}}
         {{^if instance.constructor.isChangeableExternally}}
           {{^if instance.readonly}}
             {{> /static/templates/base_objects/edit_object_link.stache}}
           {{/if}}
         {{/if}}
-      {{/if}}
+      {{/is_edit_denied}}
     {{/is_allowed}}
 
     {{#is_allowed 'create' 'CycleTaskGroupObjectTask' context=null}}
