@@ -70,11 +70,9 @@ Copyright (C) 2019 Google Inc.
       {{/if}}
       <div class="info-pane-utility">
         <three-dots-menu>
-          {{#is_allowed 'update' instance context='for'}}
-            {{^if_edit_is_denied instance}}
-              {{> /static/templates/base_objects/edit_object_link.stache}}
-            {{/if_edit_is_denied}}
-          {{/is_allowed}}
+          {{#unless isRestricted}}
+            {{> /static/templates/base_objects/edit_object_link.stache}}
+          {{/unless}}
           <li>
             <permalink-component instance:from="instance"/>
           </li>
@@ -100,48 +98,35 @@ Copyright (C) 2019 Google Inc.
           {{/if}}
 
           {{#if_in instance.status "Not Started,In Progress"}}
-            {{#is_allowed 'update' instance context='for'}}
+            {{#unless isRestricted}}
               <li>
-                {{^if_edit_is_denied instance}}
-                  <reminder-component
-                    instance:from="instance"
-                    type:from="statusToPerson"
-                    modal_title:from="'Reminder for Assignees set'"
-                    modal_description:from="'A reminder to complete the Assessment for Assignees will be sent in the next daily email digest.'">
-                      <a href="javascript://" on:el:click="reminder">
-                        <i class="fa fa-bell-o"></i>
-                        Send reminder to assignees
-                      </a>
-                  </reminder-component>
-                {{/if_edit_is_denied}}
+                <reminder-component
+                  instance:from="instance"
+                  type:from="statusToPerson"
+                  modal_title:from="'Reminder for Assignees set'"
+                  modal_description:from="'A reminder to complete the Assessment for Assignees will be sent in the next daily email digest.'">
+                    <a href="javascript://" on:el:click="reminder">
+                      <i class="fa fa-bell-o"></i>
+                      Send reminder to assignees
+                    </a>
+                </reminder-component>
               </li>
-            {{/is_allowed}}
+            {{/unless}}
           {{/if_in}}
 
-          {{#is_allowed 'update' instance context='for'}}
-            {{^if_edit_is_denied instance}}
-              <li>
-                {{^is(instance.status, "Rework Needed")}}
-                  {{#is(instance.status, "Deprecated")}}
-                    {{! Set default state }}
-                    <object-change-state
-                      toState:from="initialState"
-                      on:onStateChange="onStateChange(scope.event)">
-                        <a href="javascript:void(0)">
-                          <i class="fa fa-reply"></i>
-                          Restore
-                        </a>
-                    </object-change-state>
-                  {{else}}
-                    <object-change-state
-                      toState:from="deprecatedState"
-                      on:onStateChange="onStateChange(scope.event)">
-                        <a href="javascript:void(0)">
-                          <i class="fa fa-times-circle"></i>
-                          Deprecate
-                        </a>
-                    </object-change-state>
-                  {{/is}}
+          {{#unless isRestricted}}
+            <li>
+              {{^is(instance.status, "Rework Needed")}}
+                {{#is(instance.status, "Deprecated")}}
+                  {{! Set default state }}
+                  <object-change-state
+                    toState:from="initialState"
+                    on:onStateChange="onStateChange(scope.event)">
+                      <a href="javascript:void(0)">
+                        <i class="fa fa-reply"></i>
+                        Restore
+                      </a>
+                  </object-change-state>
                 {{else}}
                   <object-change-state
                     toState:from="deprecatedState"
@@ -152,21 +137,30 @@ Copyright (C) 2019 Google Inc.
                       </a>
                   </object-change-state>
                 {{/is}}
-              </li>
-            {{/if_edit_is_denied}}
-          {{/is_allowed}}
+              {{else}}
+                <object-change-state
+                  toState:from="deprecatedState"
+                  on:onStateChange="onStateChange(scope.event)">
+                    <a href="javascript:void(0)">
+                      <i class="fa fa-times-circle"></i>
+                      Deprecate
+                    </a>
+                </object-change-state>
+              {{/is}}
+            </li>
+          {{/unless}}
 
           {{#is_allowed 'delete' instance}}
-            {{^if_edit_is_denied instance}}
-               <li>
-                 <a data-toggle="modal-ajax-deleteform" data-object-plural="{{model.table_plural}}"
-                   data-object-singular="{{model.model_singular}}" data-modal-reset="reset"
-                   data-modal-class="modal" data-object-id="{{instance.id}}" href="javascript://">
-                   <i class="fa fa-trash"></i>
-                   Delete
-                 </a>
-               </li>
-            {{/if_edit_is_denied}}
+            {{^is_edit_denied instance}}
+              <li>
+                <a data-toggle="modal-ajax-deleteform" data-object-plural="{{model.table_plural}}"
+                  data-object-singular="{{model.model_singular}}" data-modal-reset="reset"
+                  data-modal-class="modal" data-object-id="{{instance.id}}" href="javascript://">
+                  <i class="fa fa-trash"></i>
+                  Delete
+                </a>
+              </li>
+            {{/is_edit_denied}}
           {{/is_allowed}}
         </three-dots-menu>
 

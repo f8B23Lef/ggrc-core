@@ -54,7 +54,6 @@
                                                 <confirm-edit-action
                                                     on:setEditMode="openMapper()"
                                                     on:setInProgress="setInProgressState()"
-                                                    isEditIconDenied:from="isRestricted"
                                                     instance:from="instance"
                                                     onStateChangeDfd:from="onStateChangeDfd"
                                                     editMode:from="editMode">
@@ -174,7 +173,6 @@
                                 <confirm-edit-action
                                     on:setEditMode="setUrlEditMode(true)"
                                     on:setInProgress="setInProgressState()"
-                                    isEditIconDenied:from="isSemiRestrictedOnStatus"
                                     instance:from="instance"
                                     onStateChangeDfd:from="onStateChangeDfd">
                                         <button type="button" class="btn btn-small btn-gray"
@@ -367,7 +365,6 @@
                                                 <confirm-edit-action
                                                     on:setEditMode="openMapper()"
                                                     on:setInProgress="setInProgressState()"
-                                                    isEditIconDenied:from="isRestricted"
                                                     instance:from="instance"
                                                     onStateChangeDfd:from="onStateChangeDfd"
                                                     editMode:from="editMode">

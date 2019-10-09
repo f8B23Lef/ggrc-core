@@ -23,6 +23,7 @@ export default canComponent.extend({
           let canEdit = !this.attr('isReadonly') &&
             !isSnapshot(instance) &&
             !instance.attr('archived') &&
+            !instance.attr('is_sox_restricted') &&
             !this.attr('readOnly') &&
             !this.attr('updatableGroupId') &&
             (this.attr('isNewInstance') ||

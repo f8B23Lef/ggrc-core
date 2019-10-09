@@ -32,9 +32,10 @@ export default canComponent.extend({
       addItem: {
         type: String,
         get: function () {
-          return this.attr('options.objectVersion') ?
-            false :
-            this.attr('options').add_item_view ||
+          return (this.attr('options.objectVersion')
+            || this.attr('parentInstance.is_sox_restricted'))
+            ? false
+            : this.attr('options').add_item_view ||
             this.attr('model').tree_view_options.add_item_view ||
             'base_objects/tree_add_item';
         },
