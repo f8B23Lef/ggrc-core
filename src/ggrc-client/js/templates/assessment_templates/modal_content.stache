@@ -158,7 +158,7 @@
         <i class="fa fa-question-circle sox-302-icon"
           rel="tooltip"
           title="SOX 302 assessment workflow enables:
-            - Autocomplete for positive responses (skip verification).">
+            - Assignees can only read assessment upon its completion.">
         </i>
       </div>
 
@@ -168,7 +168,7 @@
             <p>
               By checking this checkbox:
               <p>
-                - Verification step will be skipped if only positive answers are given for the assessment. Specify negative answers below.
+                - Assignees will have read only permissions upon assessment completion.
               </p>
             </p>
           </div>
