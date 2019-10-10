@@ -661,6 +661,9 @@ p {
   &.state-deprecated {
     background: $status-deprecated;
   }
+  &.state-sox302 {
+    background: $status-sox302;
+  }
 }
 .state-value-dot {
   &:before {
