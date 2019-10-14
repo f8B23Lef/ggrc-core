@@ -55,3 +55,20 @@ class WithSOX302Flow(object):  # pylint: disable=too-few-public-methods
             "sox_302_enabled",
         ),
     )
+
+
+class WithSOX302FlowReadOnly(WithSOX302Flow):
+  """Mixin which adds support for SOX 302 flow. SOX flag is read only here."""
+
+  _aliases = {
+      "sox_302_enabled": {
+          "display_name": "SOX 302 assessment workflow",
+          "description": "Read only column and will be ignored on import.",
+          "mandatory": False,
+          "view_only": True,
+      },
+  }
+
+  _api_attrs = reflection.ApiAttributes(
+      reflection.Attribute('sox_302_enabled', create=False, update=False),
+  )
