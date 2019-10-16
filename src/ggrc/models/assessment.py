@@ -29,6 +29,7 @@ from ggrc.models.mixins import reminderable
 from ggrc.models.mixins import statusable
 from ggrc.models.mixins import labeled
 from ggrc.models.mixins import issue_tracker as issue_tracker_mixins
+from ggrc.models.mixins import with_sox_302
 from ggrc.models.mixins.assignable import Assignable
 from ggrc.models.mixins.autostatuschangeable import AutoStatusChangeable
 from ggrc.models.mixins.with_action import WithAction
@@ -41,15 +42,31 @@ from ggrc.models.relationship import Relatable
 from ggrc.fulltext.mixin import Indexed
 
 
-class Assessment(Assignable, statusable.Statusable, AuditRelationship,
-                 AutoStatusChangeable, TestPlanned,
-                 CustomAttributable, WithEvidence, Commentable,
-                 Personable, reminderable.Reminderable, Relatable,
-                 LastDeprecatedTimeboxed, WithSimilarityScore, FinishedDate,
-                 VerifiedDate, Notifiable, WithAction,
-                 labeled.Labeled, with_last_comment.WithLastComment,
-                 issue_tracker_mixins.IssueTrackedWithUrl, base.ContextRBAC,
-                 BusinessObject, Indexed, db.Model):
+class Assessment(Assignable,
+                 statusable.Statusable,
+                 AuditRelationship,
+                 AutoStatusChangeable,
+                 TestPlanned,
+                 CustomAttributable,
+                 WithEvidence,
+                 Commentable,
+                 Personable,
+                 reminderable.Reminderable,
+                 Relatable,
+                 LastDeprecatedTimeboxed,
+                 WithSimilarityScore,
+                 FinishedDate,
+                 VerifiedDate,
+                 Notifiable,
+                 WithAction,
+                 labeled.Labeled,
+                 with_last_comment.WithLastComment,
+                 issue_tracker_mixins.IssueTrackedWithUrl,
+                 base.ContextRBAC,
+                 BusinessObject,
+                 with_sox_302.WithSOX302FlowReadOnly,
+                 Indexed,
+                 db.Model):
   """Class representing Assessment.
 
   Assessment is an object representing an individual assessment performed on

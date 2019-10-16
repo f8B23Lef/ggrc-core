@@ -26,6 +26,7 @@ class AssessmentTemplateColumnHandler(handlers.MappingColumnHandler):
     self.value = self.parse_item()
     if not self.dry_run and self.row_converter.is_new:
       self.create_custom_attributes()
+      self.set_sox_302_enabled_flag()
 
   def insert_object(self):
     pass
@@ -41,6 +42,12 @@ class AssessmentTemplateColumnHandler(handlers.MappingColumnHandler):
         key = (cad.definition_id, cad.title)
         self.row_converter.block_converter._ca_definitions_cache[key] = cad
     db.session.flush(created_cads)
+
+  def set_sox_302_enabled_flag(self):
+    """Set `sox_302_enabled` flag for newly created Assessment instance."""
+    if not self.value:
+      return
+    asmt_hooks.set_sox_302_enabled(self.row_converter.obj, self.value[0])
 
   def get_value(self):
     return ""
