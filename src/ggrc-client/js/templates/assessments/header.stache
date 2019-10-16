@@ -38,11 +38,6 @@ Copyright (C) 2019 Google Inc.
                         {{currentState}}
                       </div>
                     </div>
-                    {{#if instance.archived}}
-                      <span class="pane-header__title-item">
-                        <span class="state-value state-archived">Archived</span>
-                      </span>
-                    {{/if}}
                     {{#eq instance.status 'Completed'}}
                       {{#if instance.verified}}
                         <span class="pane-header__title-item">
@@ -50,6 +45,16 @@ Copyright (C) 2019 Google Inc.
                         </span>
                       {{/if}}
                     {{/eq}}
+                    {{#if instance.sox_302_enabled}}
+                      <span class="pane-header__title-item">
+                        <span class="state-value state-sox302">SOX 302</span>
+                      </span>
+                    {{/if}}
+                    {{#if instance.archived}}
+                      <span class="pane-header__title-item">
+                        <span class="state-value state-archived">Archived</span>
+                      </span>
+                    {{/if}}
                 </base-inline-control-title>
             </confirm-edit-action>
           {{/unless}}
@@ -57,7 +62,7 @@ Copyright (C) 2019 Google Inc.
     </div>
     <div class="pane-header__toolbar">
       {{#if is_info_pin}}
-        <info-pin-buttons 
+        <info-pin-buttons
           maximized:from="maximized"
           onChangeMaximizedState:from="@onChangeMaximizedState"
           onClose:from="@onClose">
@@ -119,7 +124,7 @@ Copyright (C) 2019 Google Inc.
                 {{^is(instance.status, "Rework Needed")}}
                   {{#is(instance.status, "Deprecated")}}
                     {{! Set default state }}
-                    <object-change-state 
+                    <object-change-state
                       toState:from="initialState"
                       on:onStateChange="onStateChange(scope.event)">
                         <a href="javascript:void(0)">
@@ -128,7 +133,7 @@ Copyright (C) 2019 Google Inc.
                         </a>
                     </object-change-state>
                   {{else}}
-                    <object-change-state 
+                    <object-change-state
                       toState:from="deprecatedState"
                       on:onStateChange="onStateChange(scope.event)">
                         <a href="javascript:void(0)">
@@ -138,7 +143,7 @@ Copyright (C) 2019 Google Inc.
                     </object-change-state>
                   {{/is}}
                 {{else}}
-                  <object-change-state 
+                  <object-change-state
                     toState:from="deprecatedState"
                     on:onStateChange="onStateChange(scope.event)">
                       <a href="javascript:void(0)">
@@ -168,7 +173,7 @@ Copyright (C) 2019 Google Inc.
         {{#if is_info_pin}}
           {{#unless options.isSubTreeItem}}
             <div>
-              <prev-next-buttons 
+              <prev-next-buttons
                 disabled:from="isInfoPaneSaving"
                 currentIndex:bind="options.selectedItem"
                 totalCount:bind="options.pageInfo.total">
@@ -178,7 +183,7 @@ Copyright (C) 2019 Google Inc.
         {{/if}}
 
         {{#unless isEditDenied}}
-          <object-state-toolbar 
+          <object-state-toolbar
             verifiers:from="verifiers"
             instance:from="instance"
             disabled:from="isInfoPaneSaving"
@@ -189,7 +194,7 @@ Copyright (C) 2019 Google Inc.
         {{/unless}}
         <div class="form-status">
           <info-pane-save-status infoPaneSaving:from="isInfoPaneSaving">
-            <loading-status 
+            <loading-status
               class="loading-status"
               isLoading:from="infoPaneSaving"
               loadingText:from="'Saving...'"
