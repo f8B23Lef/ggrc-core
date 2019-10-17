@@ -311,3 +311,67 @@ class TestApiWithSOX302(BaseTestWithSOX302):
         tmpl_clone_q.one(),
         exp_value,
     )
+
+
+@ddt.ddt
+class TestQueriesWithSOX302(query_helper.WithQueryApi,
+                            BaseTestWithSOX302):
+  """Test query API filtering for `WithSOX302Flow` objects."""
+
+  def setUp(self):
+    super(TestQueriesWithSOX302, self).setUp()
+    self.api = api_helper.Api()
+
+  def _assert_right_obj_found(self, query_result, expected_obj_type,
+                              expected_obj_id):
+    # type: (dict, str, int) -> None
+    """Assert that only expected object was found by query API.
+
+    For this assertion to pass, following conditions should be met:
+      - Given query result should contain only one object;
+      - ID of object in the query result should match with the given expected
+        object ID.
+
+    Args:
+      query_result (dict): Dict representing result of query API request.
+      expected_obj_type (str): Expected type of found object.
+      expected_obj_id (int): Expected ID of found object.
+    """
+    response_asmt_tmpl = query_result[0][expected_obj_type]
+    self.assertEqual(1, response_asmt_tmpl["count"])
+    self.assertEqual(
+        response_asmt_tmpl["values"][0]["id"],
+        expected_obj_id,
+    )
+
+  @ddt.data(
+      {"obj_value": True, "filter_by_value": "yes"},
+      {"obj_value": False, "filter_by_value": "no"},
+  )
+  @ddt.unpack
+  def test_sox_302_enabled_filter_tmpl(self, obj_value, filter_by_value):
+    # pylint: disable=invalid-name
+    """Test tmpl could be filtered by sox_302_enabled field."""
+    with ggrc_factories.single_commit():
+      tmpl = ggrc_factories.AssessmentTemplateFactory(
+          sox_302_enabled=obj_value)
+      ggrc_factories.AssessmentTemplateFactory(sox_302_enabled=(not obj_value))
+    searched_tmpl_id = tmpl.id
+
+    query_request_data = [
+        self._make_query_dict(
+            "AssessmentTemplate",
+            expression=["sox_302_enabled", "=", filter_by_value],
+        ),
+    ]
+
+    response = self.api.send_request(
+        self.api.client.post, data=query_request_data, api_link="/query"
+    )
+
+    self.assert200(response)
+    self._assert_right_obj_found(
+        response.json,
+        "AssessmentTemplate",
+        searched_tmpl_id,
+    )
