@@ -52,6 +52,16 @@ describe('tree-actions component', () => {
           expect(vm.attr('addItem')).toBe(expectedData);
         });
     });
+
+    describe('if is_sox_restricted is true', () => {
+      beforeEach(() => {
+        vm.attr('parentInstance', {is_sox_restricted: true});
+      });
+
+      it('returns false', () => {
+        expect(vm.attr('addItem')).toBe(false);
+      });
+    });
   });
 
   describe('isSnapshot get() method', () => {
