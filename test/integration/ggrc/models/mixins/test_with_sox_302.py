@@ -10,6 +10,7 @@ import ddt
 from ggrc.models import all_models
 from ggrc.models.mixins import with_sox_302
 from integration import ggrc as integration_tests_ggrc
+from integration.ggrc import api_helper
 from integration.ggrc import query_helper
 from integration.ggrc.models import factories as ggrc_factories
 
@@ -202,5 +203,111 @@ class TestExportWithSOX302(query_helper.WithQueryApi,
     self._assert_sox_302_enabled_flag_expored(
         exported_data,
         "Assessment Template",
+        exp_value,
+    )
+
+
+@ddt.ddt
+class TestApiWithSOX302(BaseTestWithSOX302):
+  """Test REST API functonality of `WithSOX302Flow` objects."""
+
+  def setUp(self):
+    """Set up for SOX 302 REST API test case."""
+    super(TestApiWithSOX302, self).setUp()
+    self.api = api_helper.Api()
+
+  @ddt.data(
+      {"sent_value": True, "exp_value": True},
+      {"sent_value": False, "exp_value": False},
+  )
+  @ddt.unpack
+  def test_sox_302_tmpl_create(self, sent_value, exp_value):
+    """Test SOX302 enabled={exp_value} when create asmt tmpl via API."""
+    audit = ggrc_factories.AuditFactory()
+    tmpl_q = self._get_query_by_audit_for(
+        obj_type=all_models.AssessmentTemplate,
+        audit=audit,
+    )
+
+    response = self.api.post(
+        all_models.AssessmentTemplate,
+        {
+            "assessment_template": {
+                "audit": {"id": audit.id},
+                "context": {"id": audit.context.id},
+                "default_people": {
+                    "assignees": "Admin",
+                    "verifiers": "Admin",
+                },
+                "title": "AssessmentTemplate Title",
+                "sox_302_enabled": sent_value,
+            },
+        },
+    )
+
+    self.assert201(response)
+    self._assert_sox_302_enabled_flag(
+        tmpl_q.one(),
+        exp_value,
+    )
+
+  @ddt.data(
+      {"init_value": True, "sent_value": True, "exp_value": True},
+      {"init_value": True, "sent_value": False, "exp_value": False},
+      {"init_value": False, "sent_value": True, "exp_value": True},
+      {"init_value": False, "sent_value": False, "exp_value": False},
+  )
+  @ddt.unpack
+  def test_sox_302_tmpl_update(self, init_value, sent_value, exp_value):
+    """Test SOX302 enabled={exp_value} when update asmt tmpl via API."""
+    tmpl = ggrc_factories.AssessmentTemplateFactory(
+        sox_302_enabled=init_value)
+    tmpl_q = self._get_query_to_refresh(tmpl)
+
+    response = self.api.put(
+        tmpl,
+        {
+            "sox_302_enabled": sent_value,
+        },
+    )
+
+    self.assert200(response)
+    self._assert_sox_302_enabled_flag(
+        tmpl_q.one(),
+        exp_value,
+    )
+
+  @ddt.data(
+      {"orig_value": True, "exp_value": True},
+      {"orig_value": False, "exp_value": False},
+  )
+  @ddt.unpack
+  def test_sox_302_tmpl_clone(self, orig_value, exp_value):
+    """Test AssessmentTemplate SOX 302 enabled={0} when clone via API."""
+    tmpl = ggrc_factories.AssessmentTemplateFactory(
+        sox_302_enabled=orig_value)
+    tmpl_clone_q = self._get_query_by_audit_for(
+        all_models.AssessmentTemplate,
+        tmpl.audit,
+    ).filter(
+        all_models.AssessmentTemplate.id != tmpl.id,
+    )
+
+    response = self.api.send_request(
+        self.api.client.post,
+        api_link="/api/assessment_template/clone",
+        data=[{
+            "sourceObjectIds": [tmpl.id],
+            "destination": {
+                "type": "Audit",
+                "id": tmpl.audit.id,
+            },
+            "mappedObjects": []
+        }],
+    )
+
+    self.assert200(response)
+    self._assert_sox_302_enabled_flag(
+        tmpl_clone_q.one(),
         exp_value,
     )
