@@ -78,3 +78,71 @@ class BaseTestWithSOX302(integration_tests_ggrc.TestCase):
         obj.sox_302_enabled,
         expected_value,
     )
+
+
+@ddt.ddt
+class TestImportWithSOX302(BaseTestWithSOX302):
+  """Test import of `WithSOX302Flow` objects."""
+
+  @ddt.data(
+      {"imported_value": "yes", "exp_value": True},
+      {"imported_value": "no", "exp_value": False},
+      {"imported_value": "", "exp_value": False},
+  )
+  @ddt.unpack
+  def test_sox_302_tmpl_create(self, imported_value, exp_value):
+    """Test SOX302 enabled={exp_value} when create asmt tmpl via import."""
+    audit = ggrc_factories.AuditFactory()
+    tmpl_q = self._get_query_by_audit_for(
+        obj_type=all_models.AssessmentTemplate,
+        audit=audit,
+    )
+
+    asmt_tmpl_data = collections.OrderedDict([
+        ("object_type", "Assessment Template"),
+        ("Code*", ""),
+        ("Audit*", audit.slug),
+        ("Title", "AssessmentTemplate Title"),
+        ("Default Assessment Type*", "Control"),
+        ("Default Assignees*", "Auditors"),
+        ("SOX 302 assessment workflow", imported_value),
+    ])
+
+    self._login()
+    response = self.import_data(asmt_tmpl_data)
+
+    self._check_csv_response(response, {})
+    self._assert_sox_302_enabled_flag(
+        tmpl_q.one(),
+        exp_value,
+    )
+
+  @ddt.data(
+      {"init_value": True, "imported_value": "yes", "exp_value": True},
+      {"init_value": True, "imported_value": "no", "exp_value": False},
+      {"init_value": True, "imported_value": "", "exp_value": True},
+      {"init_value": False, "imported_value": "yes", "exp_value": True},
+      {"init_value": False, "imported_value": "no", "exp_value": False},
+      {"init_value": False, "imported_value": "", "exp_value": False},
+  )
+  @ddt.unpack
+  def test_sox_302_tmpl_update(self, init_value, imported_value, exp_value):
+    """Test SOX302 enabled={exp_value} when update asmt tmpl via import."""
+    tmpl = ggrc_factories.AssessmentTemplateFactory(
+        sox_302_enabled=init_value)
+    tmpl_q = self._get_query_to_refresh(tmpl)
+
+    asmt_tmpl_data = collections.OrderedDict([
+        ("object_type", "Assessment Template"),
+        ("Code*", tmpl.slug),
+        ("SOX 302 assessment workflow", imported_value),
+    ])
+
+    self._login()
+    response = self.import_data(asmt_tmpl_data)
+
+    self._check_csv_response(response, {})
+    self._assert_sox_302_enabled_flag(
+        tmpl_q.one(),
+        exp_value,
+    )
