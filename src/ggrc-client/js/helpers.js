@@ -752,3 +752,12 @@ canStache.registerHelper('displayCount', (countObserver) => {
     return '(' + count + ')';
   }
 });
+
+canStache.registerHelper('is_edit_denied', (instance, options) => {
+  const source = isFunction(instance) ? instance(): instance;
+  const isEditDenied = source.archived || source.is_sox_restricted;
+
+  return isEditDenied
+    ? options.fn(options.context)
+    : options.inverse(options.context);
+});

@@ -10,9 +10,9 @@
                      relatedItemsType:from="'Issue'">
         <div class="grid-data__toolbar flex-box">
             <tree-pagination paging:from="paging" class="grid-data__toolbar-item"></tree-pagination>
-            {{^if baseInstance.archived}}
-                    <add-issue-button relatedInstance:from="baseInstance" class="grid-data__toolbar-item"></add-issue-button>
-            {{/if}}
+            {{^is_edit_denied baseInstance}}
+              <add-issue-button relatedInstance:from="baseInstance" class="grid-data__toolbar-item"></add-issue-button>
+            {{/is_edit_denied}}
         </div>
         <div class="grid-data-header flex-row flex-box">
             <div class="flex-size-2">
