@@ -80,6 +80,8 @@ import Evidence from '../../../models/business-models/evidence';
 import * as businessModels from '../../../models/business-models';
 import {getAjaxErrorInfo} from '../../../plugins/utils/errors-utils';
 
+const SEMI_RESTRICTED_STATUSES = ['Deprecated', 'Completed'];
+
 /**
  * Assessment Specific Info Pane View Component
  */
@@ -218,8 +220,7 @@ export default canComponent.extend({
       },
       isSemiRestrictedOnStatus: {
         get: function () {
-          const semiRestrictedStatuses = ['Deprecated', 'Completed'];
-          const isSemiRestrictedStatus = semiRestrictedStatuses
+          const isSemiRestrictedStatus = SEMI_RESTRICTED_STATUSES
             .includes(this.attr('instance.status'))
             && this.attr('instance.is_sox_restricted');
 
