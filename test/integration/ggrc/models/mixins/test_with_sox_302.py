@@ -10,6 +10,7 @@ import ddt
 from ggrc.models import all_models
 from ggrc.models.mixins import with_sox_302
 from integration import ggrc as integration_tests_ggrc
+from integration.ggrc import query_helper
 from integration.ggrc.models import factories as ggrc_factories
 
 
@@ -144,5 +145,62 @@ class TestImportWithSOX302(BaseTestWithSOX302):
     self._check_csv_response(response, {})
     self._assert_sox_302_enabled_flag(
         tmpl_q.one(),
+        exp_value,
+    )
+
+
+@ddt.ddt
+class TestExportWithSOX302(query_helper.WithQueryApi,
+                           BaseTestWithSOX302):
+  """Test export of of `WithSOX302Flow` objects."""
+
+  def _assert_sox_302_enabled_flag_expored(self, exported_data, obj_name,
+                                           expected_value):
+    # type: (dict, str, str) -> None
+    # pylint: disable=invalid-name
+    """Assert that `sox_302_enabled` has expected value in exported data.
+
+    For this assertion to pass, following conditions should be met:
+      - Given object name should be present in exported data;
+      - There should be only one object of provided type in exported data.
+      - Value of "SOX 302 assessment workflow" in exported data should match
+        with passed `expected_value`.
+
+    Args:
+      exported_data (dict): Dict representing exported object. Keys are field
+        names as they should be named in resulting .CSV file.
+      obj_name (str): Capitalized human readable object name.
+      expected_value (str): Expected value of "SOX 302 assessment workflow"
+        column in exported data.
+    """
+    self.assertIn(obj_name, exported_data)
+    self.assertEqual(1, len(exported_data[obj_name]))
+    exported_obj_data = exported_data[obj_name][0]
+    self.assertEqual(
+        exported_obj_data["SOX 302 assessment workflow"],
+        expected_value,
+    )
+
+  @ddt.data(
+      {"obj_value": True, "exp_value": "yes"},
+      {"obj_value": False, "exp_value": "no"},
+  )
+  @ddt.unpack
+  def test_sox_302_tmpl_export(self, obj_value, exp_value):
+    """Test `SOX 302 assessment workflow` is exported correctly for tmpl."""
+    tmpl = ggrc_factories.AssessmentTemplateFactory(sox_302_enabled=obj_value)
+    tmpl_id = tmpl.id
+
+    self._login()
+    exported_data = self.export_parsed_csv([
+        self._make_query_dict(
+            "AssessmentTemplate",
+            expression=["id", "=", tmpl_id],
+        )
+    ])
+
+    self._assert_sox_302_enabled_flag_expored(
+        exported_data,
+        "Assessment Template",
         exp_value,
     )
