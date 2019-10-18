@@ -283,6 +283,73 @@ describe('assessment-info-pane component', () => {
       });
   });
 
+  describe('isRestricted get() method', () => {
+    beforeEach(() => {
+      spyOn(Permission, 'isAllowedFor');
+      vm.attr('instance', {});
+    });
+
+    it('returns true if isEditDenied is set to true', () => {
+      Permission.isAllowedFor.and.returnValue(false);
+      const result = vm.attr('isRestricted');
+      expect(result).toBe(true);
+    });
+
+    it('returns true if isEditDenied and ' +
+      'is_sox_restricted are set to true', () => {
+      vm.attr('instance', {is_sox_restricted: true});
+      Permission.isAllowedFor.and.returnValue(true);
+      const result = vm.attr('isRestricted');
+      expect(result).toBe(true);
+    });
+
+    it('returns false if isEditDenied and ' +
+    'instance.is_sox_restricted are set to false', () => {
+      vm.attr('instance', {is_sox_restricted: false});
+      Permission.isAllowedFor.and.returnValue(true);
+      const result = vm.attr('isRestricted');
+      expect(result).toBe(false);
+    });
+
+    it('returns true if instance.is_sox_restricted is set to true ' +
+    ' isEditDenied is set to false ', () => {
+      vm.attr('instance', {is_sox_restricted: true});
+      Permission.isAllowedFor.and.returnValue(true);
+      const result = vm.attr('isRestricted');
+      expect(result).toBe(true);
+    });
+  });
+
+  describe('isSemiRestrictedOnStatus get() method', () => {
+    beforeEach(() => {
+      spyOn(Permission, 'isAllowedFor');
+      vm.attr('instance', {});
+    });
+
+    it('returns true if isEditDenied is set to true', () => {
+      Permission.isAllowedFor.and.returnValue(false);
+      vm.attr('instance', {is_sox_restricted: false, status: 'In Progress'});
+      const result = vm.attr('isSemiRestrictedOnStatus');
+      expect(result).toBe(true);
+    });
+
+    it('returns true if instance.is_sox_restricted is set to true ' +
+    'and status is "Completed"', () => {
+      Permission.isAllowedFor.and.returnValue(true);
+      vm.attr('instance', {is_sox_restricted: true, status: 'Completed'});
+      const result = vm.attr('isSemiRestrictedOnStatus');
+      expect(result).toBe(true);
+    });
+
+    it('returns false if instance.is_sox_restricted is set to true ' +
+    'and status is "In Progress"', () => {
+      Permission.isAllowedFor.and.returnValue(true);
+      vm.attr('instance', {is_sox_restricted: true, status: 'In Progress'});
+      const result = vm.attr('isSemiRestrictedOnStatus');
+      expect(result).toBe(false);
+    });
+  });
+
   describe('isInfoPaneSaving get() method', () => {
     it('returns false if related items are updating', function () {
       vm.attr('isUpdatingRelatedItems', true);
@@ -334,6 +401,38 @@ describe('assessment-info-pane component', () => {
       const obj = {state: 'In Progress', undo: false};
       vm.setInProgressState();
       expect(vm.onStateChange).toHaveBeenCalledWith(obj);
+    });
+  });
+
+  describe('isReadOnlyAttribute() method', () => {
+    beforeEach(() => {
+      spyOn(Permission, 'isAllowedFor');
+      vm.attr('instance', {archived: false});
+      vm.attr('instance.get_read_only_fields', []);
+    });
+
+    it('returns true if isEditDenied is set to true', () => {
+      Permission.isAllowedFor.and.returnValue(false);
+      const result = vm.isReadOnlyAttribute();
+      expect(result).toBe(true);
+    });
+
+    it('returns true if propName is included ' +
+    'to readOnlyAttributes list', () => {
+      Permission.isAllowedFor.and.returnValue(true);
+      const propName = 'title';
+      vm.attr('instance.get_read_only_fields', [propName]);
+      const result = vm.isReadOnlyAttribute(propName);
+      expect(result).toBe(true);
+    });
+
+    it('returns false if propName is not included ' +
+    'to readOnlyAttributes list', () => {
+      Permission.isAllowedFor.and.returnValue(true);
+      const propName = 'title';
+      vm.attr('instance.get_read_only_fields', ['description']);
+      const result = vm.isReadOnlyAttribute(propName);
+      expect(result).toBe(false);
     });
   });
 
