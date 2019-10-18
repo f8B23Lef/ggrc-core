@@ -187,7 +187,8 @@ class AssessmentEvidenceUrls(object):
 
   def get_urls(self):
     """Get urls"""
-    return [el.text for el in self._root.elements(class_name="link")]
+    return [el.text for el in self._root.elements(
+        class_name="item-edit-control__content__link")]
 
 
 class CommentArea(object):
