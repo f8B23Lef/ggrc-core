@@ -33,7 +33,7 @@ export default canComponent.extend({
         type: String,
         get: function () {
           return (this.attr('options.objectVersion')
-            || this.attr('parentInstance.is_sox_restricted'))
+            || this.attr('parentInstance._is_sox_restricted'))
             ? false
             : this.attr('options').add_item_view ||
             this.attr('model').tree_view_options.add_item_view ||

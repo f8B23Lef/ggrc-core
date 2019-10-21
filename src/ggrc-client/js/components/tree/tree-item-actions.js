@@ -55,7 +55,7 @@ const viewModel = canMap.extend({
         let type = instance.attr('type');
         let isSnapshot = this.attr('isSnapshot');
         let isArchived = instance.attr('archived');
-        let isRestricted = instance.attr('is_sox_restricted');
+        let isRestricted = instance.attr('_is_sox_restricted');
         let isInForbiddenList = forbiddenEditList.indexOf(type) > -1;
         return !isAllowedFor('update', instance) ||
           (isSnapshot || isInForbiddenList || isArchived || isRestricted);

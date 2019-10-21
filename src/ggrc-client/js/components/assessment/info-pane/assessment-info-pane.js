@@ -215,14 +215,14 @@ export default canComponent.extend({
       isRestricted: {
         get: function () {
           return this.attr('isEditDenied')
-            || this.attr('instance.is_sox_restricted');
+            || this.attr('instance._is_sox_restricted');
         },
       },
       isSemiRestrictedOnStatus: {
         get: function () {
           const isSemiRestrictedStatus = SEMI_RESTRICTED_STATUSES
             .includes(this.attr('instance.status'))
-            && this.attr('instance.is_sox_restricted');
+            && this.attr('instance._is_sox_restricted');
 
           return this.attr('isEditDenied') || isSemiRestrictedStatus;
         },
@@ -289,7 +289,7 @@ export default canComponent.extend({
       this.onStateChange({state: 'In Progress', undo: false});
     },
     isReadOnlyAttribute: function (propName) {
-      const readOnlyAttributes = this.attr('instance.get_read_only_fields');
+      const readOnlyAttributes = this.attr('instance._readonly_fields');
       const isEditDenied = this.attr('isEditDenied');
       const isReadOnly = [...readOnlyAttributes].includes(propName);
       return isReadOnly || isEditDenied;

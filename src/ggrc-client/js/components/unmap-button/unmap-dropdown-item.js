@@ -63,8 +63,8 @@ export default canComponent.extend({
             && options.attr('isDirectlyRelated')
             && !this.attr('denyIssueUnmap')
             && !this.attr('denySnapshotUnmap')
-            && !source.is_sox_restricted
-            && !destination.is_sox_restricted;
+            && !source._is_sox_restricted
+            && !destination._is_sox_restricted;
         },
       },
       isMappableExternally: {
