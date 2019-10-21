@@ -218,7 +218,7 @@ describe('unmap-dropdown-item component', function () {
         expect(viewModel.attr('isAllowedToUnmap')).toBe(true);
       });
 
-      it('returns false when is_sox_restricted of ' +
+      it('returns false when _is_sox_restricted of ' +
       'parent instance is true', () => {
         Mappings.allowedToUnmap.and.returnValue(true);
         CurrentPageUtils.isAllObjects.and.returnValue(false);
@@ -229,12 +229,12 @@ describe('unmap-dropdown-item component', function () {
         viewModel.attr('instance.type', 'Snapshot');
         viewModel.attr('instance.archived', false);
 
-        viewModel.attr('page_instance.is_sox_restricted', true);
+        viewModel.attr('page_instance._is_sox_restricted', true);
 
         expect(viewModel.attr('isAllowedToUnmap')).toBe(false);
       });
 
-      it('returns false when is_sox_restricted of instance is true', () => {
+      it('returns false when _is_sox_restricted of instance is true', () => {
         Mappings.allowedToUnmap.and.returnValue(true);
         CurrentPageUtils.isAllObjects.and.returnValue(false);
         CurrentPageUtils.isMyWork.and.returnValue(false);
@@ -244,7 +244,7 @@ describe('unmap-dropdown-item component', function () {
         viewModel.attr('instance.type', 'Snapshot');
         viewModel.attr('instance.archived', false);
 
-        viewModel.attr('instance.is_sox_restricted', true);
+        viewModel.attr('instance._is_sox_restricted', true);
 
         expect(viewModel.attr('isAllowedToUnmap')).toBe(false);
       });
