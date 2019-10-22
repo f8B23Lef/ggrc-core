@@ -101,6 +101,12 @@ class IssueTracked(object):
   def warnings(self):
     return self._warnings
 
+  def log_json(self):
+    """Serialize IssueTracker to JSON"""
+    tmp = super(IssueTracked, self).log_json()
+    tmp["issue_tracker"] = self.issue_tracker
+    return tmp
+
 
 class IssueTrackedWithUrl(IssueTracked):
   """Class that identifies IssueTracked models that have url."""

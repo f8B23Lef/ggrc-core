@@ -33,6 +33,7 @@ from ggrc.models.mixins import with_sox_302
 from ggrc.models.mixins.assignable import Assignable
 from ggrc.models.mixins.autostatuschangeable import AutoStatusChangeable
 from ggrc.models.mixins.with_action import WithAction
+from ggrc.models.mixins.with_custom_restrictions import WithCustomRestrictions
 from ggrc.models.mixins.with_evidence import WithEvidence
 from ggrc.models.mixins.with_similarity_score import WithSimilarityScore
 from ggrc.models.deferred import deferred
@@ -62,11 +63,13 @@ class Assessment(Assignable,
                  labeled.Labeled,
                  with_last_comment.WithLastComment,
                  issue_tracker_mixins.IssueTrackedWithUrl,
+                 WithCustomRestrictions,
                  base.ContextRBAC,
                  BusinessObject,
                  with_sox_302.WithSOX302FlowReadOnly,
                  Indexed,
                  db.Model):
+
   """Class representing Assessment.
 
   Assessment is an object representing an individual assessment performed on
@@ -176,6 +179,42 @@ class Assessment(Assignable,
 
   _custom_publish = {
       'audit': audit.build_audit_stub,
+  }
+
+  _in_progress_restrictions = (
+      "access_control_list",
+      "description",
+      "title",
+      "labels",
+      "test_plan",
+      "assessment_type",
+      "slug",
+      "notes",
+      "start_date",
+      "design",
+      "operationally",
+      "reminderType",
+      "issue_tracker",
+      "map: GlobalCustomAttributes",
+      "map: Snapshots",
+      "map: Issue",
+  )
+
+  _done_state_restrictions = _in_progress_restrictions + (
+      "custom_attributes_values",
+      "map: Evidence",
+  )
+
+  _restriction_condition = {
+      "status": {
+          (statusable.Statusable.START_STATE,
+           statusable.Statusable.PROGRESS_STATE,
+           REWORK_NEEDED,
+           statusable.Statusable.DONE_STATE): _in_progress_restrictions,
+          (statusable.Statusable.VERIFIED_STATE,
+           statusable.Statusable.FINAL_STATE,
+           statusable.Statusable.DEPRECATED): _done_state_restrictions
+      }
   }
 
   @classmethod
