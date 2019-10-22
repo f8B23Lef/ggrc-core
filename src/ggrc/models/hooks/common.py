@@ -5,10 +5,13 @@
 
 import sqlalchemy as sa
 
+from werkzeug.exceptions import MethodNotAllowed
+
 from ggrc import db
 from ggrc.fulltext import mixin
 from ggrc.models import all_models
 from ggrc.models.mixins import attributable
+from ggrc.models.mixins.with_custom_restrictions import WithCustomRestrictions
 from ggrc.utils import referenced_objects
 
 
@@ -38,11 +41,26 @@ def map_objects(src, dst):
   if not destination:
     raise ValueError("No {} with id {} found."
                      .format(dst["type"], dst["id"]))
+
+  check_mapping_permissions(src, destination)
+
   db.session.add(all_models.Relationship(
       source=src,
       destination=destination,
       context=src.context or destination.context,
   ))
+
+
+def check_mapping_permissions(obj1, obj2):
+  """Check is mapping allowed between objects"""
+  error_message = "Mapping of this objects is not allowed"
+  if isinstance(obj1, WithCustomRestrictions):
+    if obj1.is_mapping_restricted(obj2):
+      raise MethodNotAllowed(description=error_message)
+
+  if isinstance(obj2, WithCustomRestrictions):
+    if obj2.is_mapping_restricted(obj1):
+      raise MethodNotAllowed(description=error_message)
 
 
 def _handle_obj_delete(mapper, connection, target):

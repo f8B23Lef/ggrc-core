@@ -14,6 +14,7 @@ from ggrc import db
 import ggrc.services.common
 from ggrc.models.snapshot import Snapshot
 from ggrc.models import relationship
+from ggrc.models.hooks.common import check_mapping_permissions
 from ggrc.models.mixins.with_readonly_access import WithReadOnlyAccess
 from ggrc.login import get_current_user
 from ggrc.rbac import permissions
@@ -56,6 +57,8 @@ class RelationshipResource(ggrc.services.common.Resource):
 
     if isinstance(obj2, WithReadOnlyAccess):
       RelationshipResource._validate_readonly_relationship(obj2, obj1)
+
+    check_mapping_permissions(obj1, obj2)
 
   @staticmethod
   def _parse_snapshot_data(src):

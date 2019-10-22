@@ -135,6 +135,9 @@ class WithAction(object):
         obj = self._create(parent, action)
         added.append(obj)
 
+      from ggrc.models.hooks.common import check_mapping_permissions
+      check_mapping_permissions(parent, obj)
+
       rel = Relationship(source=parent,
                          destination=obj,
                          context=parent.context)

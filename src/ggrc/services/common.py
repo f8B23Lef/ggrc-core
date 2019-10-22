@@ -647,6 +647,14 @@ class Resource(ModelView):
           description="The object is in a read-only mode and "
                       "is dedicated for SOX needs")
 
+  @staticmethod
+  def _validate_readonly_fields(obj, src):
+    if hasattr(obj, "is_updating_readonly_fields"):
+      if obj.is_updating_readonly_fields(src):
+        raise MethodNotAllowed(
+            description="Some fields in the object is in a read-only "
+                        "mode for Assignees")
+
   def _validate_readonly_access_on_post(self, objects, sources):
     """Validate read-only access on POST"""
 
@@ -683,6 +691,9 @@ class Resource(ModelView):
       # check read-only access AFTER check for permissions to disallow
       # user obtain value for flag "readonly"
       self._validate_readonly_access(obj, src)
+
+    with benchmark("Validate read-only fields access"):
+      self._validate_readonly_fields(obj, src)
 
     with benchmark("Deserialize object"):
       self.json_update(obj, src)
