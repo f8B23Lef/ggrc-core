@@ -390,6 +390,37 @@ def load_access_control_list(user, permissions):
           .add(object_id)
 
 
+def permissions_for_object(user, obj):
+  """Load roles from access_control_roles for user with access to obj."""
+  access_control_list = db.session.execute(sa.text("""
+      SELECT
+          access_control_roles.`name` AS role_name,
+          access_control_roles.`parent_id` AS role_parent_id,
+          access_control_roles.`read` AS acr_read,
+          access_control_roles.`update` AS acr_update,
+          access_control_roles.`delete` AS acr_delete
+      FROM
+          access_control_list AS acl_propagated,
+          access_control_roles,
+          access_control_people,
+          access_control_list AS acl_base
+      WHERE
+          access_control_people.person_id = :user_id
+              AND access_control_people.ac_list_id = acl_base.id
+              AND acl_base.id = acl_propagated.base_id
+              AND acl_propagated.ac_role_id = access_control_roles.id
+              AND acl_propagated.object_type = :object_type
+              AND acl_propagated.object_id = :object_id
+  """), {"user_id": user.id,
+         "object_type": obj.__class__.__name__,
+         "object_id": obj.id})
+  res = dict()
+  for name, parent_id, read, update, delete in access_control_list:
+    res[name] = {'read': read, 'update': update, 'delete': delete,
+                 'parent_id': parent_id}
+  return res
+
+
 def store_results_into_memcache(permissions, cache, key):
   """Load personal context for user
 
