@@ -53,9 +53,9 @@ describe('tree-actions component', () => {
         });
     });
 
-    describe('if is_sox_restricted is true', () => {
+    describe('if _is_sox_restricted is true', () => {
       beforeEach(() => {
-        vm.attr('parentInstance', {is_sox_restricted: true});
+        vm.attr('parentInstance', {_is_sox_restricted: true});
       });
 
       it('returns false', () => {
