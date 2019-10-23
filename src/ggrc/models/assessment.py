@@ -8,6 +8,8 @@ from sqlalchemy.orm import validates
 from sqlalchemy import orm
 import sqlalchemy as sa
 
+from ggrc import rbac
+from ggrc import login
 from ggrc import db
 from ggrc import utils
 from ggrc.builder import simple_property
@@ -144,6 +146,7 @@ class Assessment(Assignable, statusable.Statusable, AuditRelationship,
       reflection.Attribute('archived', create=False, update=False),
       reflection.Attribute('folder', create=False, update=False),
       reflection.Attribute('object', create=False, update=False),
+      reflection.Attribute('is_show_related_objs_tabs', create=False, update=False),
   )
 
   _fulltext_attrs = [
@@ -151,6 +154,7 @@ class Assessment(Assignable, statusable.Statusable, AuditRelationship,
       'design',
       'operationally',
       'folder',
+      'is_show_related_objs_tabs',
   ]
 
   AUTO_REINDEX_RULES = [
@@ -250,6 +254,13 @@ class Assessment(Assignable, statusable.Statusable, AuditRelationship,
           "view_only": True,
           "description": "Allowed values are:\nyes\nno"
       },
+      "is_show_related_objs_tabs":{
+          "display_name": "is_show_related_objs_tabs",
+          "mandatory": False,
+          "ignore_on_update": True,
+          "view_only": True,
+          "description": "Allowed values are:\nyes\nno"
+      },
       "test_plan": "Assessment Procedure",
       # Currently we decided to have 'Due Date' alias for start_date,
       # but it can be changed in future
@@ -274,6 +285,13 @@ class Assessment(Assignable, statusable.Statusable, AuditRelationship,
   @simple_property
   def folder(self):
     return self.audit.folder if self.audit else ""
+
+  @simple_property
+  def is_show_related_objs_tabs(self):
+    """Show related objects tabs like related asmt and related issue."""
+    is_auditor = rbac.permissions_provider.is_auditor(self)
+    is_creator = login.is_creator()
+    return not (is_auditor and is_creator)
 
   def validate_conclusion(self, value):
     return value if value in self.VALID_CONCLUSIONS else ""
