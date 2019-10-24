@@ -318,25 +318,30 @@ class TestArchivedAudit(TestAuditArchivingBase):
     self.api.set_user(self.people[person])
     for obj in objects:
       obj_instance = getattr(self, obj)
-      title = factories.random_str().strip()
+      title = factories.random_str().strip().encode('utf-8')
       json = {
-          "title": title
+          "title": title,
       }
       if obj == "issue":
         json["due_date"] = "10/10/2019"
       response = self.api.put(obj_instance, json)
-      assert response.status_code == status, \
+      self.assertStatus(
+          response, status,
           "{} put returned {} instead of {} for {}".format(
-              person, response.status, status, obj)
+              person, response.status, status, obj
+          ),
+      )
+
       if status != 200:
         # if editing is allowed check if edit was correctly saved
         continue
       table_singular = obj_instance._inflector.table_singular
-      assert response.json[table_singular].get("title", None) == title, \
+      self.assertEqual(
+          response.json[table_singular].get("title", None), title,
           "{} has not been updated correctly {} != {}".format(
-          obj,
-          response.json[obj]['title'],
-          title)
+              obj, response.json[table_singular]['title'], title,
+          ),
+      )
 
   @data(
       ('Admin', 200, 'snapshot'),
