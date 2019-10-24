@@ -37,6 +37,7 @@ export default Cacheable.extend({
   is_custom_attributable: true,
   isRoleable: true,
   defaults: {
+    is_show_related_objs_tabs: true, // show or hide Related Assessments and Related Issues tabs
     test_plan_procedure: true,
     assessment_type: 'Control',
     status: 'Not Started',

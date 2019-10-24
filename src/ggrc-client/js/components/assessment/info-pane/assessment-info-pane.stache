@@ -305,30 +305,32 @@
             </div>
         </div>
          </tab-panel>
-          <tab-panel panels:bind="panels"
-                     tabId:from="'tab-related-assessments'"
-                     cacheContent:from="true"
-                     parentInstance:from="instance"
-                     preRenderContent:from="true"
-                     titleText:from="'Related Assessments'">
-            {{#instance}}
-                <related-assessments
-                    instance:from="instance"
-                    needReuse:from="true"
-                    on:reusableObjectsCreated="addReusableEvidence(scope.event)">
-                </related-assessments>
-            {{/instance}}
-          </tab-panel>
-          <tab-panel panels:bind="panels"
-                     cacheContent:from="true"
-                     preRenderContent:from="true"
-                     titleText:from="'Related Issues'">
-                {{#instance}}
-                    <related-issues baseInstance:from="instance"
-                        allRelatedSnapshots:from="mappedSnapshots">
-                    </related-issues>
-                {{/instance}}
-          </tab-panel>
+          {{#if instance.is_show_related_objs_tabs}}
+            <tab-panel panels:bind="panels"
+                       tabId:from="'tab-related-assessments'"
+                       cacheContent:from="true"
+                       parentInstance:from="instance"
+                       preRenderContent:from="true"
+                       titleText:from="'Related Assessments'">
+              {{#instance}}
+                  <related-assessments
+                      instance:from="instance"
+                      needReuse:from="true"
+                      on:reusableObjectsCreated="addReusableEvidence(scope.event)">
+                  </related-assessments>
+              {{/instance}}
+            </tab-panel>
+            <tab-panel panels:bind="panels"
+                       cacheContent:from="true"
+                       preRenderContent:from="true"
+                       titleText:from="'Related Issues'">
+                  {{#instance}}
+                      <related-issues baseInstance:from="instance"
+                          allRelatedSnapshots:from="mappedSnapshots">
+                      </related-issues>
+                  {{/instance}}
+            </tab-panel>
+          {{/if}}
           <tab-panel panels:bind="panels"
                      titleText:from="'Other Attributes'"
                      class="assessment-attributes-panel"
