@@ -16,7 +16,7 @@ from alembic import op
 
 # revision identifiers, used by Alembic.
 revision = "015aeca94ac8"
-down_revision = "75ad21f0622b"
+down_revision = "394f80f98f02"
 
 
 def add_sox302_flag():
