@@ -3,7 +3,7 @@
     Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 }}
 
-{{#unless instance._is_sox_restricted}}
+{{#unless isSemiRestrictedOnStatus}}
   <custom-attributes-actions
     disabled:from="isInfoPaneSaving"
     instance:from="instance"
