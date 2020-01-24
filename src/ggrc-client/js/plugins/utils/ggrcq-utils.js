@@ -103,9 +103,10 @@ function getQuestionsUrl(instance) {
  * @return {String} Url to info view
  */
 function getInfoUrl(instance) {
+  const {model, path} = getUrlModelAndPath(instance);
   return getUrl({
-    model: instance.constructor.table_singular,
-    path: instance.constructor.table_plural,
+    model,
+    path,
     slug: instance.slug,
     view: 'info',
   });
@@ -117,9 +118,10 @@ function getInfoUrl(instance) {
  * @return {String} Url to comment form
  */
 function getCommentFormUrl(instance) {
+  const {model, path} = getUrlModelAndPath(instance);
   return getUrl({
-    model: instance.constructor.table_singular,
-    path: instance.constructor.table_plural,
+    model,
+    path,
     slug: instance.slug,
     view: 'info',
     params: 'comments=open',
@@ -156,9 +158,10 @@ function getImportUrl() {
  * @return {String} Url to proposals view
  */
 function getProposalsUrl(instance) {
+  const {model, path} = getUrlModelAndPath(instance);
   return getUrl({
-    model: instance.constructor.table_singular,
-    path: instance.constructor.table_plural,
+    model,
+    path,
     slug: instance.slug,
     view: 'proposals',
   });
@@ -170,9 +173,10 @@ function getProposalsUrl(instance) {
  * @return {String} Url to change log view
  */
 function getChangeLogUrl(instance) {
+  const {model, path} = getUrlModelAndPath(instance);
   return getUrl({
-    model: instance.constructor.table_singular,
-    path: instance.constructor.table_plural,
+    model,
+    path,
     slug: instance.slug,
     view: 'change-log',
   });
@@ -202,6 +206,7 @@ function getMapUrl(instance, destinationModel, statuses) {
   let view = scopingDest ? 'scope'
     : destinationModel.table_plural;
   let path = instance.constructor.table_plural;
+  let model = instance.constructor.table_singular;
 
   if (scopingSource) {
     path = 'questionnaires';
@@ -215,6 +220,7 @@ function getMapUrl(instance, destinationModel, statuses) {
     }
   } else if (extDirectiveSource) {
     path = 'directives';
+    model = 'directive';
 
     if (scopingDest) {
       view = 'applicable-scope';
@@ -235,7 +241,7 @@ function getMapUrl(instance, destinationModel, statuses) {
 
   return getUrl({
     path,
-    model: instance.constructor.table_singular,
+    model,
     slug: instance.slug,
     view,
     params,
@@ -281,8 +287,10 @@ function getCreateObjectUrl(model) {
       params: `create=${model.root_object}`,
     };
   } else {
+    const isDirective = externalDirectiveObjects.includes(model.model_singular);
+    const path = isDirective ? 'directives' : model.table_plural;
     options = {
-      path: model.table_plural,
+      path,
       params: 'action=create',
     };
   }
@@ -303,10 +311,7 @@ function getProposalAttrUrl(
   attributeName,
   isCustomAttribute,
 ) {
-  const isDirective = externalDirectiveObjects.includes(instance.type);
-  const model = isDirective ? 'directive' : instance.constructor.table_singular;
-  const path = isDirective ? 'directives' : instance.constructor.table_plural;
-
+  const {model, path} = getUrlModelAndPath(instance);
   return getUrl({
     model,
     path,
@@ -318,6 +323,20 @@ function getProposalAttrUrl(
     }=${attributeName}`,
   });
 }
+
+/**
+* Get url model and path according to instance's model_singular
+* @param {Object} instance - The model instance
+* @return {Object} Object contained model and path keys
+*/
+const getUrlModelAndPath= (instance) => {
+  const isDirective = externalDirectiveObjects
+    .includes(instance.constructor.model_singular);
+  const model = isDirective ? 'directive' : instance.constructor.table_singular;
+  const path = isDirective ? 'directives' : instance.constructor.table_plural;
+  return {model, path};
+};
+
 
 export {
   hasQuestions,
