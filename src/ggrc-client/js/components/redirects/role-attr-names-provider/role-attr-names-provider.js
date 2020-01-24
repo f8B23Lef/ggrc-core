@@ -19,6 +19,8 @@ const roleToLinkMap = {
     'Risk Owners': 'risk_owner',
     'Other Contacts': 'other_contact',
   },
+  Regulation: {},
+  Standard: {},
 };
 
 const viewModel = canMap.extend({

@@ -40,6 +40,8 @@ const infoWidgetViews = Object.freeze({
   evidence: '/evidence/info.stache',
   documents: '/documents/info.stache',
   risks: '/risks/info.stache',
+  standards: '/standards/info.stache',
+  regulations: '/regulations/info.stache',
 });
 
 let CoreExtension = {};
