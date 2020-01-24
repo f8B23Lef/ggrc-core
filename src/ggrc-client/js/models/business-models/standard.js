@@ -6,7 +6,6 @@
 import Cacheable from '../cacheable';
 import AccessControlList from '../mixins/access-control-list';
 import Proposable from '../mixins/proposable';
-import Reviewable from '../mixins/reviewable';
 import ChangeableExternally from '../mixins/changeable-externally';
 import Stub from '../stub';
 
@@ -33,7 +32,6 @@ export default Cacheable.extend({
   },
   mixins: [
     AccessControlList,
-    Reviewable,
     ChangeableExternally,
     Proposable,
   ],
@@ -43,10 +41,6 @@ export default Cacheable.extend({
         attr_title: 'State',
         attr_name: 'status',
         order: 40,
-      }, {
-        attr_title: 'Review State',
-        attr_name: 'review_status',
-        order: 80,
       }, {
         attr_title: 'Effective Date',
         attr_name: 'start_date',
