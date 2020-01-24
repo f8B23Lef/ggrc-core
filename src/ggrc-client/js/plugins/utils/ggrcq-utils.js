@@ -303,9 +303,13 @@ function getProposalAttrUrl(
   attributeName,
   isCustomAttribute,
 ) {
+  const isDirective = externalDirectiveObjects.includes(instance.type);
+  const model = isDirective ? 'directive' : instance.constructor.table_singular;
+  const path = isDirective ? 'directives' : instance.constructor.table_plural;
+
   return getUrl({
-    model: instance.constructor.table_singular,
-    path: instance.constructor.table_plural,
+    model,
+    path,
     slug: instance.slug,
     view: 'info',
     params: `${isCustomAttribute
