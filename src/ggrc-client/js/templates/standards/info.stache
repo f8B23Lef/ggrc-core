@@ -116,6 +116,24 @@
                       </div>
                     </div>
                   </div>
+                  <div class="row-fluid wrap-row">
+                    <div class="span4">
+                      <div class="action-toolbar-container">
+                        <div class="action-toolbar">
+                          <h6 class="action-toolbar__header">
+                            Created By
+                          </h6>
+                        </div>
+                        {{#if created_by}}
+                          <p>
+                            {{created_by.email}}
+                          </p>
+                        {{else}}
+                          <span class="empty-message">None</span>
+                        {{/if}}
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div><!-- custom-attr-wrap end -->
               {{> custom_attributes/info.stache}}
