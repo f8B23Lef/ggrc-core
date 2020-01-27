@@ -6,12 +6,27 @@
 {{^if instance.constructor.isChangeableExternally}}
   <object-review instance:from="instance"></object-review>
 {{else}}
-  <div class="row-fluid wrap-row">
-    <div class="span12">
-      <h6>Review Status</h6>
-      <span class="state-value-dot review-status {{#if review_status}}{{addclass 'state' review_status}}{{else}}'state-unreviewed'{{/if}}">
-        {{firstnonempty review_status_display_name 'Unreviewed'}}
-      </span>
+  {{#if instance.constructor.isReviewable}}
+    <div class="row-fluid wrap-row">
+      <div class="span12">
+        <h6>Review Status</h6>
+        <span class="state-value-dot review-status {{#if review_status}}{{addclass 'state' review_status}}{{else}}'state-unreviewed'{{/if}}">
+          {{firstnonempty review_status_display_name 'Unreviewed'}}
+        </span>
+      </div>
     </div>
-  </div>
+  {{else}}
+    <div class="object-review">
+      <div class="object-review__header">
+        <div class="object-review__header-title">
+          Object Review
+        </div>
+        <div class="object-review__header-status">
+          <div class="state-value state-{{lowercase instance.review_status}}">
+            {{instance.review_status}}
+          </div>
+        </div>
+      </div>
+    </div>
+  {{/if}}
 {{/if}}
