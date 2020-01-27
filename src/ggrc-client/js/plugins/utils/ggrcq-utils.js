@@ -202,30 +202,24 @@ function getMapUrl(instance, destinationModel, statuses) {
   const extBusinessSource = externalBusinessObjects.includes(source);
   const extBusinessDest = externalBusinessObjects.includes(destination);
 
-
-  let view = scopingDest ? 'scope'
-    : destinationModel.table_plural;
+  let view = destinationModel.table_plural;
   let path = instance.constructor.table_plural;
   let model = instance.constructor.table_singular;
 
+  if (extDirectiveDest) {
+    view = 'directives';
+  } else if (scopingDest) {
+    view = 'scope';
+  } else if (!extBusinessDest) {
+    return '';
+  }
+
   if (scopingSource) {
     path = 'questionnaires';
-
-    if (extDirectiveDest) {
-      view = 'map-objects';
-    }
-  } else if (extBusinessSource) {
-    if (extDirectiveDest) {
-      view = 'directives';
-    }
   } else if (extDirectiveSource) {
     path = 'directives';
     model = 'directive';
-
-    if (scopingDest) {
-      view = 'applicable-scope';
-    }
-  } else {
+  } else if (!extBusinessSource) {
     return '';
   }
 
@@ -234,8 +228,8 @@ function getMapUrl(instance, destinationModel, statuses) {
     addType = false;
   }
 
-  const typeParamName = scopingDest ? 'types'
-    : (extDirectiveDest ? 'type' : '');
+  const typeParamName = (scopingDest || extDirectiveDest)
+    ? 'types' : '';
   const params = `mappingStatus=${statuses}`
     + (addType ? `&${typeParamName}=${destinationModel.table_singular}` : '');
 
