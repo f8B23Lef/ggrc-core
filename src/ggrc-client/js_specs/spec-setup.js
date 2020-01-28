@@ -158,35 +158,14 @@ GGRC.Bootstrap = {
     title_plural: 'Contracts',
     model_singular: 'Contract',
   }, {
-    title_plural: 'Controls',
-    model_singular: 'Control',
-  }, {
     title_plural: 'Assessments',
     model_singular: 'Assessment',
-  }, {
-    title_plural: 'Data Assets',
-    model_singular: 'DataAsset',
-  }, {
-    title_plural: 'Facilities',
-    model_singular: 'Facility',
   }, {
     title_plural: 'Issues',
     model_singular: 'Issue',
   }, {
-    title_plural: 'Key Reports',
-    model_singular: 'KeyReport',
-  }, {
-    title_plural: 'Account Balance',
-    title_singular: 'AccountBalance',
-  }, {
-    title_plural: 'Markets',
-    model_singular: 'Market',
-  }, {
     title_plural: 'Objectives',
     model_singular: 'Objective',
-  }, {
-    title_plural: 'Org Groups',
-    model_singular: 'OrgGroup',
   }, {
     title_plural: 'People',
     model_singular: 'Person',
@@ -194,47 +173,20 @@ GGRC.Bootstrap = {
     title_plural: 'Policies',
     model_singular: 'Policy',
   }, {
-    title_plural: 'Processes',
-    model_singular: 'Process',
-  }, {
-    title_plural: 'Products',
-    model_singular: 'Product',
-  }, {
-    title_plural: 'Product Groups',
-    model_singular: 'ProductGroup',
-  }, {
     title_plural: 'Programs',
     model_singular: 'Program',
   }, {
     title_plural: 'Projects',
     model_singular: 'Project',
   }, {
-    title_plural: 'Regulations',
-    model_singular: 'Regulation',
-  }, {
     title_plural: 'Requirements',
     model_singular: 'Requirement',
-  }, {
-    title_plural: 'Standards',
-    model_singular: 'Standard',
-  }, {
-    title_plural: 'Systems',
-    model_singular: 'System',
-  }, {
-    title_plural: 'Metrics',
-    model_singular: 'Metric',
-  }, {
-    title_plural: 'Technology Environments',
-    model_singular: 'TechnologyEnvironment',
   }, {
     title_plural: 'Task Groups',
     model_singular: 'TaskGroup',
   }, {
     title_plural: 'Task Group Tasks',
     model_singular: 'TaskGroupTask',
-  }, {
-    title_plural: 'Vendors',
-    model_singular: 'Vendor',
   }, {
     title_plural: 'Workflows',
     model_singular: 'Workflow',
