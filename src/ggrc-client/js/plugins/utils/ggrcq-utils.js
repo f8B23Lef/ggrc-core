@@ -272,23 +272,24 @@ function getUnmappingUrl(instance, destinationModel) {
  * @return {String} Url to create new object
  */
 function getCreateObjectUrl(model) {
-  let options;
-
   const isScope = scopingObjects.includes(model.model_singular);
+  const isDirective = externalDirectiveObjects.includes(model.model_singular);
+  let path = model.table_plural;
+  let objectBeingCreated = model.root_object;
+
   if (isScope) {
-    options = {
-      path: 'scope',
-      params: `create=${model.root_object}`,
-    };
-  } else {
-    const isDirective = externalDirectiveObjects.includes(model.model_singular);
-    const path = isDirective ? 'directives' : model.table_plural;
-    options = {
-      path,
-      params: 'action=create',
-    };
+    path = 'scope';
   }
 
+  if (isDirective) {
+    path = 'directives';
+    objectBeingCreated = 'directive';
+  }
+
+  const options = {
+    path,
+    params: `create=${objectBeingCreated}`,
+  };
   return getUrl(options);
 }
 
