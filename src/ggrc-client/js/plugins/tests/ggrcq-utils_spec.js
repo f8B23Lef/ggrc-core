@@ -379,8 +379,13 @@ describe('GGRCQ utils', () => {
     });
 
     it('should return proper url for non-scope object', () => {
-      const url = `${GGRC.GGRC_Q_INTEGRATION_URL}controls?action=create`;
+      const url = `${GGRC.GGRC_Q_INTEGRATION_URL}controls?create=control`;
       expect(getCreateObjectUrl(Control)).toBe(url);
+    });
+
+    it('should return proper url for directive object', () => {
+      const url = `${GGRC.GGRC_Q_INTEGRATION_URL}directives?create=directive`;
+      expect(getCreateObjectUrl(Standard)).toBe(url);
     });
   });
 });
