@@ -24,7 +24,7 @@
                   <external-attribute
                     instance:from="instance"
                     title:from="'Description'"
-                    attrName:from="'description'"
+                    attrName:from="description"
                   >
                     <div class="rtf-block">
                       <read-more
@@ -41,7 +41,7 @@
                   <external-attribute
                     instance:from="instance"
                     title:from="'Notes'"
-                    attrName:from="'notes'"
+                    attrName:from="notes"
                   >
                     <div class="rtf-block">
                       <read-more
@@ -93,7 +93,7 @@
                       <external-attribute
                         instance:from="instance"
                         title:from="'Effective Date'"
-                        attrName:from="'start_date'"
+                        attrName:from="start_date"
                       >
                         {{#if start_date}}
                           <p>
@@ -145,7 +145,7 @@
             </div>
             {{^if isSnapshot}}
             <div class="info-pane__sidebar">
-              <div class="info-pane__section-title">Responses/Comments!</div>
+              <div class="info-pane__section-title">Responses/Comments</div>
               <comments-section class="flex-box flex-col"
                 instance:from="instance"
                 notification:from="'Notify Admins, Control Operators, Control Owners and Other Contacts'">
@@ -167,7 +167,7 @@
             instance:from="instance"
             panels:bind="panels"
             titleText:from="'Change Proposals'"
-            linkType:from="'proposals'"
+            linkType:from="proposals"
           ></tab-link>
         {{/if}}
       </tab-container>
