@@ -9,8 +9,8 @@ import canMap from 'can-map';
 import canComponent from 'can-component';
 import '../object-tasks/object-tasks';
 import '../mapped-counter/mapped-counter';
-import Directive from '../../models/business-models/directive';
 import Requirement from '../../models/business-models/requirement';
+import {externalDirectiveObjects} from '../../plugins/models-types-collections';
 import CycleTaskGroupObjectTask from '../../models/business-models/cycle-task-group-object-task';
 import CycleTaskGroup from '../../models/business-models/cycle-task-group';
 import Cycle from '../../models/business-models/cycle';
@@ -21,40 +21,41 @@ let viewModel = canMap.extend({
   define: {
     isActive: {
       type: 'boolean',
-      get: function () {
+      get() {
         return this.attr('drawStatuses') ||
-          this.attr('isDirective') ||
+          this.attr('isRequirementShown') ||
           this.attr('isCycleTasks') ||
           this.attr('isRequirement');
       },
     },
-    isDirective: {
+    isRequirementShown: {
       type: 'boolean',
-      get: function () {
-        return this.attr('instance') instanceof Directive;
+      get() {
+        return [...externalDirectiveObjects, 'Policy', 'Contract']
+          .includes(this.attr('instance').constructor.model_singular);
       },
     },
     isRequirement: {
       type: 'boolean',
-      get: function () {
+      get() {
         return this.attr('instance') instanceof Requirement;
       },
     },
     isCycleTaskGroupObjectTask: {
       type: 'boolean',
-      get: function () {
+      get() {
         return this.attr('instance') instanceof CycleTaskGroupObjectTask;
       },
     },
     isCycleTaskGroup: {
       type: 'boolean',
-      get: function () {
+      get() {
         return this.attr('instance') instanceof CycleTaskGroup;
       },
     },
     isCycleTasks: {
       type: 'boolean',
-      get: function () {
+      get() {
         return this.attr('isCycleTaskGroup') ||
           this.attr('isCycleTaskGroupObjectTask') ||
           this.attr('instance') instanceof Cycle;
@@ -71,32 +72,32 @@ let viewModel = canMap.extend({
     raisePopover: {
       type: 'boolean',
       value: false,
-      get: function () {
+      get() {
         return this.attr('hovered') || this.attr('readyStatus');
       },
     },
     disablePopover: {
       type: 'boolean',
-      get: function () {
+      get() {
         return this.attr('instance') instanceof Cycle;
       },
     },
     drawStatuses: {
       type: 'boolean',
-      get: function () {
+      get() {
         return !!this.attr('instance.workflow_state');
       },
     },
     isShowOverdue: {
       type: 'boolean',
-      get: function () {
+      get() {
         return this.attr('isCycleTaskGroup') ||
           this.attr('isCycleTaskGroupObjectTask');
       },
     },
     isOverdue: {
       type: 'boolean',
-      get: function () {
+      get() {
         let isWorkflowOverdue =
           this.attr('drawStatuses') &&
           this.attr('instance.workflow_state') === 'Overdue';
@@ -122,7 +123,7 @@ let viewModel = canMap.extend({
     },
     cssClasses: {
       type: 'string',
-      get: function () {
+      get() {
         let classes = [];
 
         if (this.attr('isOverdue')) {
@@ -143,14 +144,14 @@ let viewModel = canMap.extend({
       },
     },
   },
-  onEnter: function () {
+  onEnter() {
     this.processPendingContent();
     this.attr('active', true);
     if (!this.attr('triggered')) {
       this.attr('triggered', true);
     }
   },
-  onLeave: function () {
+  onLeave() {
     this.attr('active', false);
   },
   processPendingContent() {
