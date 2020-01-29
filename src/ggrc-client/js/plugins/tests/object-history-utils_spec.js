@@ -13,6 +13,7 @@ import {makeFakeInstance} from '../../../js_specs/spec-helpers';
 import Vendor from '../../models/business-models/vendor';
 import Risk from '../../models/business-models/risk';
 import canMap from 'can-map';
+import Standard from '../../models/business-models/standard';
 
 describe('"buildModifiedACL" method', () => {
   it('should not add duplicates', () => {
@@ -186,6 +187,15 @@ describe('"getInstanceView" method', () => {
 
     // "GGRC.Templates" const contains template for Risk
     const instance = makeFakeInstance({model: Risk})();
+
+    const view = getInstanceView(instance);
+    expect(view).toEqual(expectedPath);
+  });
+
+  it('should return directives "view" path for Standard', () => {
+    const expectedPath = '/directives/info.stache';
+
+    const instance = makeFakeInstance({model: Standard})();
 
     const view = getInstanceView(instance);
     expect(view).toEqual(expectedPath);
