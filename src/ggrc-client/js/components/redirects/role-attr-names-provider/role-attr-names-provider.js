@@ -19,15 +19,20 @@ const roleToLinkMap = {
     'Risk Owners': 'risk_owner',
     'Other Contacts': 'other_contact',
   },
-  Regulation: {},
-  Standard: {},
+  defaults: {
+    Admin: 'owner',
+    'Primary Contacts': 'contact',
+    'Secondary Contacts': 'secondary_contact',
+  },
 };
 
 const viewModel = canMap.extend({
   define: {
     linkAttrName: {
       get() {
-        return roleToLinkMap[this.attr('modelType')][this.attr('roleName')];
+        const roles = roleToLinkMap[this.attr('modelType')]
+          || roleToLinkMap.defaults;
+        return roles[this.attr('roleName')];
       },
     },
   },

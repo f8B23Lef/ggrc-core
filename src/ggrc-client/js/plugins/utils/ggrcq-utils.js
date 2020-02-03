@@ -324,7 +324,7 @@ function getProposalAttrUrl(
 * @param {Object} instance - The model instance
 * @return {Object} Object contained model and path keys
 */
-const getUrlModelAndPath= (instance) => {
+const getUrlModelAndPath = (instance) => {
   const isDirective = externalDirectiveObjects
     .includes(instance.constructor.model_singular);
   const model = isDirective ? 'directive' : instance.constructor.table_singular;
