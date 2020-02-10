@@ -9,7 +9,7 @@ import canDefineMap from 'can-define/map/map';
 import canComponent from 'can-component';
 import '../object-tasks/object-tasks';
 import '../mapped-counter/mapped-counter';
-import Directive from '../../models/business-models/directive';
+import {externalDirectiveObjects} from '../../plugins/models-types-collections';
 import Requirement from '../../models/business-models/requirement';
 import CycleTaskGroupObjectTask from '../../models/business-models/cycle-task-group-object-task';
 import CycleTaskGroup from '../../models/business-models/cycle-task-group';
@@ -53,14 +53,15 @@ const ViewModel = canDefineMap.extend({
   isActive: {
     get() {
       return this.drawStatuses
-        || this.isDirective
+        || this.isRequirementShown
         || this.isCycleTasks
         || this.isRequirement;
     },
   },
-  isDirective: {
+  isRequirementShown: {
     get() {
-      return this.instance instanceof Directive;
+      return [...externalDirectiveObjects, 'Policy', 'Contract']
+        .includes(this.instance.constructor.model_singular);
     },
   },
   isRequirement: {
