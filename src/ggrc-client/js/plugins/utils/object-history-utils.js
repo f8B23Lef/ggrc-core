@@ -8,6 +8,7 @@ import loGroupBy from 'lodash/groupBy';
 import loUnion from 'lodash/union';
 import loFindIndex from 'lodash/findIndex';
 import canMap from 'can-map';
+import {externalDirectiveObjects} from '../../plugins/models-types-collections';
 
 // #region ACL
 const buildAclObject = (person, roleId) => {
@@ -169,8 +170,7 @@ const buildModifiedAttValues = (values, definitions, modifiedAttrs) => {
 
 const getInstanceView = (instance) => {
   let typeView;
-  let view;
-  const defaultPath = '/base_objects/info.stache';
+  let view = '/base_objects/info.stache';
 
   if (!instance) {
     return '';
@@ -180,8 +180,9 @@ const getInstanceView = (instance) => {
 
   if (typeView in GGRC.Templates) {
     view = `/${typeView}.stache`;
-  } else {
-    view = defaultPath;
+  } else if (externalDirectiveObjects
+    .includes(instance.constructor.model_singular)) {
+    view = '/directives/info.stache';
   }
 
   return view;
