@@ -59,10 +59,6 @@ export default Cacheable.extend({
         attr_name: 'notes',
         order: 100,
       }, {
-        attr_title: 'Assessment Procedure',
-        attr_name: 'test_plan',
-        order: 105,
-      }, {
         attr_title: 'Last Deprecated Date',
         attr_name: 'end_date',
         order: 110,
