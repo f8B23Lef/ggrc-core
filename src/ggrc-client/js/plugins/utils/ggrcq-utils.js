@@ -303,9 +303,10 @@ function getProposalAttrUrl(
   attributeName,
   isCustomAttribute,
 ) {
+  const {model, path} = getUrlModelAndPath(instance);
   return getUrl({
-    model: instance.constructor.table_singular,
-    path: instance.constructor.table_plural,
+    model,
+    path,
     slug: instance.slug,
     view: 'info',
     params: `${isCustomAttribute
@@ -314,6 +315,19 @@ function getProposalAttrUrl(
     }=${attributeName}`,
   });
 }
+
+/**
+* Get url model and path according to instance's model_singular
+* @param {Object} instance - The model instance
+* @return {Object} Object containing model and path
+*/
+const getUrlModelAndPath = (instance) => {
+  const isDirective = externalDirectiveObjects
+    .includes(instance.constructor.model_singular);
+  const model = isDirective ? 'directive' : instance.constructor.table_singular;
+  const path = isDirective ? 'directives' : instance.constructor.table_plural;
+  return {model, path};
+};
 
 export {
   hasQuestions,

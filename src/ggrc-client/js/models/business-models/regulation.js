@@ -6,6 +6,7 @@
 import Cacheable from '../cacheable';
 import AccessControlList from '../mixins/access-control-list';
 import Reviewable from '../mixins/reviewable';
+import Proposable from '../mixins/proposable';
 import ChangeableExternally from '../mixins/changeable-externally';
 
 export default Cacheable.extend({
@@ -29,6 +30,7 @@ export default Cacheable.extend({
     AccessControlList,
     Reviewable,
     ChangeableExternally,
+    Proposable,
   ],
   tree_view_options: {
     attr_list: Cacheable.attr_list.concat([
