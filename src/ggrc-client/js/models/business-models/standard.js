@@ -59,6 +59,10 @@ export default Cacheable.extend({
         attr_name: 'notes',
         order: 100,
       }, {
+        attr_title: 'Created By',
+        attr_name: 'created_by',
+        order: 105,
+      }, {
         attr_title: 'Last Deprecated Date',
         attr_name: 'end_date',
         order: 110,
