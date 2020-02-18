@@ -35,23 +35,6 @@
                 <div class="span12">
                   <external-attribute
                     instance:from="instance"
-                    title:from="'Assessment Procedure'"
-                    attrName:from="'test_plan'"
-                  >
-                    <div class="rtf-block">
-                      <read-more
-                        text:from="test_plan"
-                        handleMarkdown:from="true">
-                      </read-more>
-                    </div>
-                  </external-attribute>
-                </div>
-              </div>
-
-              <div class="row-fluid wrap-row">
-                <div class="span12">
-                  <external-attribute
-                    instance:from="instance"
                     title:from="'Notes'"
                     attrName:from="'notes'"
                   >
