@@ -79,13 +79,13 @@ describe('Model "status" attr test', function () {
 
 describe('Model review state test', function () {
   const reviewObjects = ['Contract', 'Objective',
-    'Policy', 'Program', 'Regulation', 'Requirement', 'Standard',
-    'Threat'];
+    'Policy', 'Program', 'Requirement', 'Threat'];
   const externalReviewObjects = ['Control', 'Risk'];
   const objectsWithoutReview = ['AccessGroup', 'AccountBalance', 'Assessment',
     'AssessmentTemplate', 'Audit', 'DataAsset', 'Facility', 'Issue',
     'KeyReport', 'Market', 'Metric', 'OrgGroup', 'Process', 'Product',
-    'ProductGroup', 'Project', 'System', 'TechnologyEnvironment', 'Vendor'];
+    'ProductGroup', 'Project', 'System', 'TechnologyEnvironment', 'Vendor',
+    'Regulation', 'Standard'];
 
   reviewObjects.forEach(function (object) {
     it('checks if ' + object + ' has review status in attr_list', () => {
