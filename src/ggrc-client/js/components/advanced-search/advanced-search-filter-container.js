@@ -77,6 +77,18 @@ const ViewModel = AdvancedSearchContainer.extend({
     Value: canList,
   },
   /**
+   * Indicates whether Operator field should be displayed.
+   */
+  showOperator: {
+    value: true,
+  },
+  /**
+   * Indicates whether Filter State should be disabled
+   */
+  disabledState: {
+    value: false,
+  },
+  /**
    * Contains key of collection which will be used to get list of available
    * statuses for certain model.
    * @type {Symbol|null}

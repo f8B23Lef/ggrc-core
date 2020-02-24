@@ -11,6 +11,8 @@
         filterOperatorOptions:from="filterOperatorOptions"
         availableAttributes:from="availableAttributes"
         statesCollectionKey:from="statesCollectionKey"
+        showOperator:from="showOperator"
+        disabledState:from="disabledState"
         modelName:from="modelName" />
     </section>
     <section class="advanced-search__row">

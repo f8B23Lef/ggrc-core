@@ -12,6 +12,8 @@
           <advanced-search-filter-state
             modelName:from="modelName"
             statesCollectionKey:from="statesCollectionKey"
+            showOperator:from="showOperator"
+            disabledState:from="disabledState"
             stateModel:bind="value">
           </advanced-search-filter-state>
         </div>

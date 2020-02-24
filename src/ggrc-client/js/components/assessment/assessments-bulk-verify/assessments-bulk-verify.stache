@@ -23,6 +23,8 @@
       availableAttributes:from="filterAttributes"
       filterItems:bind="filterItems"
       mappingItems:to="mappingItems"
+      showOperator:from="false"
+      disabledState:from="true"
       on:vm:onSubmit="onSubmit()">
         <can-template name="mapped-to-section">
           {{#isMyAssessmentsView}}

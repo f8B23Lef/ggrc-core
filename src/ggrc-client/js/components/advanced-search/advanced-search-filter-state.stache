@@ -18,8 +18,9 @@
   <div class="filter-state__value">
     <multiselect-dropdown
             options:from="filterStates"
-            on:vm:selectedChanged="statesChanged(scope.event)"
-            placeholder:from="'Filter by State'">
+            on:vm:dropdownClose="statesChanged(scope.event)"
+            placeholder:from="'Filter by State'"
+            disabled:from="disabledState">
     </multiselect-dropdown>
   </div>
   {{#if statusTooltipVisible}}

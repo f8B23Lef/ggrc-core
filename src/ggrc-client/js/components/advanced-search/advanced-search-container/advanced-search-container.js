@@ -43,6 +43,9 @@ const ViewModel = canDefineMap.extend({
   disabled: {
     value: false,
   },
+  showOperator: {
+    value: true,
+  },
   resetFilters() {
     this.filterItems = this.defaultFilterItems.serialize();
     this.mappingItems = [];
