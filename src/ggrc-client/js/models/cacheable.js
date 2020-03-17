@@ -37,21 +37,25 @@ export default canModel.extend({
       attr_title: 'Title',
       attr_name: 'title',
       order: 10,
+      common: true,
     },
     {
       attr_title: 'Code',
       attr_name: 'slug',
       order: 30,
+      common: true,
     },
     {
       attr_title: 'Last Updated Date',
       attr_name: 'updated_at',
       order: 70,
+      common: true,
     },
     {
       attr_title: 'Last Updated By',
       attr_name: 'modified_by',
       order: 71,
+      common: true,
     },
   ],
 

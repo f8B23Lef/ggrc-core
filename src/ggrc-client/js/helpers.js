@@ -25,6 +25,7 @@ import {
   isAllowedFor,
   isAllowedAny,
 } from './permission';
+import {isAttributeVisible} from './plugins/utils/attribute-utils';
 import modalModels from './models/modal-models';
 import {isScopeModel} from './plugins/utils/models-utils';
 import {scopingObjects} from './plugins/models-types-collections';
@@ -349,6 +350,15 @@ canStache.registerHelper('current_user_is_admin', function (options) {
 
 canStache.registerHelper('urlPath', function () {
   return window.location.pathname;
+});
+
+canStache.registerHelper('is_visible', (attrName, instance, options) => {
+  const isVisible = isAttributeVisible(attrName, instance);
+
+  if (isVisible) {
+    return options.fn(options.contexts);
+  }
+  return options.inverse(options.contexts);
 });
 
 /*
