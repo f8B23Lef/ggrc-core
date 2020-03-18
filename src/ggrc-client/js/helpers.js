@@ -37,6 +37,7 @@ import {
   formatDate,
 } from './plugins/utils/date-utils';
 import {validateAttr, isValidAttr} from './plugins/utils/validation-utils';
+import {isAttributeVisible} from './plugins/utils/attribute-utils';
 
 /**
  * Builds class name of two segments - prefix and computed value
@@ -727,4 +728,15 @@ canStache.registerHelper('is_edit_denied', (instance, options) => {
   return isEditDenied
     ? options.fn(options.context)
     : options.inverse(options.context);
+});
+
+canStache.registerHelper('is_visible_attr', (attrName, instance, options) => {
+  const source = isFunction(instance) ? instance() : instance;
+  const type = source.constructor.model_singular;
+  const isVisible = isAttributeVisible(attrName, type);
+
+  if (isVisible) {
+    return options.fn(options.contexts);
+  }
+  return options.inverse(options.contexts);
 });

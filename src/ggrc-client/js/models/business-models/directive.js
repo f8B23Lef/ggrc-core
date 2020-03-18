@@ -18,6 +18,8 @@ export default Cacheable.extend({
   findAll: '/api/directives',
   findOne: '/api/directives/{id}',
   mixins: [UniqueTitle, CaUpdate, BaseNotifications],
+  soxOnlyAttributes: ['test_plan'],
+  nonSoxOnlyAttributes: [],
   tree_view_options: {
     attr_list: Cacheable.attr_list.concat([
       {

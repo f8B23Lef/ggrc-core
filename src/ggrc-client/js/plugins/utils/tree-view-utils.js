@@ -16,6 +16,7 @@ import {
   toObject,
   transformQueryToSnapshot,
 } from './snapshot-utils';
+import {isAttributeVisible} from './attribute-utils';
 import {
   related,
   initMappedInstances,
@@ -161,7 +162,8 @@ function getAvailableAttributes(modelType) {
     Model.tree_view_options.attr_list ||
     Cacheable.attr_list
   ).filter(function (attr) {
-    return !attr.deny;
+    const isVisible = isAttributeVisible(attr.attr_name, modelType);
+    return isVisible && !attr.deny;
   }).map(function (attr) {
     attr = Object.assign({}, attr);
     if (!attr.attr_sort_field) {

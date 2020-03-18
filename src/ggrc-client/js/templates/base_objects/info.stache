@@ -15,7 +15,9 @@
                 {{> base_objects/object-review.stache}}
               {{/isScopeModel}}
               {{> base_objects/description.stache}}
-              {{> base_objects/test-plan.stache}}
+              {{#is_visible_attr "test_plan" instance}}
+                {{> base_objects/test-plan.stache}}
+              {{/is_visible_attr}}
               {{> base_objects/notes.stache}}
               {{> base_objects/contacts.stache}}
               {{> base_objects/reference-urls.stache}}
