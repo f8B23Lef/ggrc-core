@@ -24,6 +24,10 @@ const ViewModel = canDefineMap.extend({
     type: 'boolean',
     value: false,
   },
+  shouldUpdateFolder: {
+    type: 'boolean',
+    value: false,
+  },
   canEdit: {
     get() {
       return !this.readonly && !this._folder_change_pending;
@@ -150,6 +154,20 @@ export default canComponent.extend({
       }
 
       viewModel.setRevisionFolder();
+    },
+    '{viewModel.instance} modelAfterSave'() {
+      const folder = this.viewModel.instance.attr('_transient.folder');
+      if (folder) {
+        this.viewModel.instance.attr('_transient.folder', null);
+        this.viewModel.linkFolder(folder.id);
+        this.viewModel.shouldUpdateFolder = true;
+      }
+    },
+    '{viewModel.instance} folder'() {
+      if (this.viewModel.shouldUpdateFolder) {
+        this.viewModel.setRevisionFolder();
+        this.viewModel.shouldUpdateFolder = false;
+      }
     },
     '{viewModel.instance} change'() {
       if (!this.viewModel.folder_error) {
