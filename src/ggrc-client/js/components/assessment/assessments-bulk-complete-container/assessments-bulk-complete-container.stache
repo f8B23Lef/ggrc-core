@@ -24,5 +24,6 @@
           </button>
       </div> 
     </div>
+    <table-view assessmentsList:from="assessmentsList" attributesList:from="attributesList" />
   {{/if}}
 </div>

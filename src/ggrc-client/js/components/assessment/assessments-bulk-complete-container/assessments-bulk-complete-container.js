@@ -11,6 +11,7 @@ import {request} from '../../../plugins/utils/request-utils';
 import {getFiltersForCompletion} from '../../../plugins/utils/bulk-update-service';
 import {buildParam} from '../../../plugins/utils/query-api-utils';
 import {isMyAssessments} from '../../../plugins/utils/current-page-utils';
+import '../../table/table-view/table-view';
 
 const ViewModel = canDefineMap.extend({
   currentFilter: {
