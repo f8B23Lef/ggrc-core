@@ -4,24 +4,37 @@
 }}
 
 <tr>
-  <th>
+  <th class="table-view__subtable_sticky">
     <table>
       <tr>
-        <td>
-          <a href="/assessments/{{rowData.asmtId}}" target="_blank">
-            {{rowData.asmtTitle}}
-          </a>
+        <td class="table-view__cell">
+          <div class="cell-content__wrapper">
+            {{#if isReadyForCompletion}}
+              <div class="icon__wrapper">
+                <i class="fa fa-check blue"></i>
+              </div>
+            {{/if}}
+            <div class="cell-content">
+              <a href="/assessments/{{rowData.asmtId}}" target="_blank">
+                {{rowData.asmtTitle}}
+              </a>
+            </div>
+          </div>
         </td>
-        <td>
-          <span class="state-value-dot {{addclass 'state' rowData.asmtStatus}}">
-            {{rowData.asmtStatus}}
-          </span>
+        <td class="table-view__cell">
+          <div class="cell-content__wrapper">
+            <div class="cell-content">
+              <span class="state-value-dot {{addclass 'state' rowData.asmtStatus}}">
+                {{rowData.asmtStatus}}
+              </span>
+            </div>
+          </div>
         </td>
       </tr>
     </table>
   </th>
   {{#each rowData.attributes}}
-    <td>
+    <td class="table-view__cell">
       {{#if isApplicable}}
         {{value}}
       {{else}}

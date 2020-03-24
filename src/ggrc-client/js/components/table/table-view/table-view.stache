@@ -3,7 +3,7 @@
     Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 }}
 
-<div>
+<div class="table-view__content">
   <table>
     <thead>
       <table-view-header headersData:from="headersData" />

@@ -4,21 +4,37 @@
 }}
 
 <tr>
-  <th>
+  <th class="table-view__subtable_sticky">
     <table>
       <tr>
-        <td>Title</td>
-        <td>Status</td>
+        <td class="table-view__cell">
+          <div class="cell-content__wrapper">
+            <div class="cell-content">
+              Title
+            </div>
+          </div>
+        </td>
+        <td class="table-view__cell">
+          <div class="cell-content__wrapper">
+            <div class="cell-content">
+              Status
+            </div>
+          </div>
+        </td>
       </tr>
     </table>
   </th>
   {{#headersData}}
-    <th>
-      <div>
-        {{#if mandatory}}
-          <i class="fa fa-asterisk field__mandatory"></i>
-        {{/if}}
-        {{title}}
+    <th class="table-view__cell">
+      <div class="cell-content__wrapper">
+        <div class="icon__wrapper">
+          {{#if mandatory}}
+            <i class="fa fa-asterisk field__mandatory"></i>
+          {{/if}}
+        </div>
+        <div class="cell-content">
+          {{title}}
+        </div>
       </div>
     </th>
   {{/headersData}}
