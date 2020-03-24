@@ -6,30 +6,16 @@
 import canComponent from 'can-component';
 import canDefineMap from 'can-define/map/map';
 import canStache from 'can-stache';
-import template from './table-view.stache';
-import '../table-view-header/table-view-header';
+import template from './table-view-header.stache';
 
 const ViewModel = canDefineMap.extend({seal: false}, {
-  assessmentsList: {
-    value: () => [],
-  },
-  attributesList: {
-    value: () => [],
-  },
   headersData: {
-    get() {
-      return this.attributesList.map((attribute) => {
-        return {
-          title: attribute.title,
-          mandatory: attribute.mandatory,
-        };
-      });
-    },
+    value: () => [],
   },
 });
 
 export default canComponent.extend({
-  tag: 'table-view',
+  tag: 'table-view-header',
   view: canStache(template),
   ViewModel,
 });
