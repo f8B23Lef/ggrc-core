@@ -6,11 +6,11 @@
 import canMap from 'can-map';
 import canComponent from 'can-component';
 import canStache from 'can-stache';
-import template from './assessments-bulk-complete-button.stache';
+import template from './assessments-bulk-completion-button.stache';
 import {isMyAssessments} from '../../../plugins/utils/current-page-utils';
 
 const viewModel = canMap.extend({
-  isButtonView: false,
+  enabled: false,
   parentInstance: null,
   async openBulkCompleteModal(el) {
     const {AssessmentsBulkComplete} = await import(

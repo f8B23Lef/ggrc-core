@@ -40,17 +40,30 @@ export default {
   },
 };
 
-export const requestAssessmentsCount = (relevant = null) => {
+const requestAssessmentsCount = (
+  relevant = null,
+  filters,
+  permissions = null
+) => {
+  const param = buildParam('Assessment', {}, relevant, [], filters);
+  param.type = 'count';
+
+  if (permissions) {
+    param.permissions = permissions;
+  }
+
+  return batchRequests(param).then(({Assessment: {count}}) => count);
+};
+
+export const getAsmtCountForCompletion = (relevant) => {
   const filters = {
     expression: {
       left: {
-        object_name: 'Person',
+        left: 'assignees',
         op: {
-          name: 'relevant',
+          name: '~',
         },
-        ids: [
-          GGRC.current_user.id,
-        ],
+        right: GGRC.current_user.email,
       },
       op: {
         name: 'AND',
@@ -71,19 +84,27 @@ export const requestAssessmentsCount = (relevant = null) => {
           name: 'AND',
         },
         right: {
-          left: 'archived',
-          op: {
-            name: '=',
+          left: {
+            left: 'sox_302_enabled',
+            op: {
+              name: '=',
+            },
+            right: 'yes',
           },
-          right: 'false',
+          op: {
+            name: 'AND',
+          },
+          right: {
+            left: 'archived',
+            op: {
+              name: '=',
+            },
+            right: 'false',
+          },
         },
       },
     },
   };
 
-  const param = buildParam('Assessment', {}, relevant, [], filters);
-  param.type = 'count';
-  param.permissions = 'update';
-
-  return batchRequests(param).then(({Assessment: {count}}) => count);
+  return requestAssessmentsCount(relevant, filters, 'update');
 };

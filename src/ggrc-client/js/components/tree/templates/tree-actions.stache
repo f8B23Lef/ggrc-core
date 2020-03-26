@@ -74,11 +74,6 @@
           </create-task-group-button>
         </li>
       {{/if}}
-      {{#if showBulkComplete}}
-        <li>
-          <assessments-bulk-complete-button parentInstance:from="parentInstance" />
-        </li>
-      {{/if}}
     </three-dots-menu>
   {{/if}}
 </div>

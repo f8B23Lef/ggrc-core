@@ -9,7 +9,7 @@ import canMap from 'can-map';
 import canComponent from 'can-component';
 import '../three-dots-menu/three-dots-menu';
 import '../change-request-link/change-request-link';
-import '../assessment/assessments-bulk-complete-button/assessments-bulk-complete-button';
+import '../assessment/assessments-bulk-completion-button/assessments-bulk-completion-button';
 import '../assessment/assessment-tree-actions/assessment-tree-actions';
 import {
   isMyAssessments,
@@ -118,9 +118,6 @@ export default canComponent.extend({
         get() {
           return this.attr('showedItems').length;
         },
-      },
-      showBulkComplete: {
-        value: false,
       },
     },
     parentInstance: null,

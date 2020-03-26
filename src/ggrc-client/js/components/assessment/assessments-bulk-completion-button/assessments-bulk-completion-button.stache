@@ -1,0 +1,13 @@
+{{!
+    Copyright (C) 2019 Google Inc.
+    Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
+}}
+
+<button
+  type="button"
+  class="btn btn-small btn-darkBlue"
+  {{^if enabled}}disabled{{/if}}
+  on:el:click="openBulkCompleteModal(scope.element)"
+>
+  Bulk completion
+</button>
