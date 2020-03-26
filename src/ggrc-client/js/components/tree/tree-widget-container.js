@@ -41,6 +41,7 @@ import * as StateUtils from '../../plugins/utils/state-utils';
 import {
   REFRESH_RELATED,
   REFRESH_MAPPING,
+  CURRENT_FILTER_UPDATED,
 } from '../../events/event-types';
 import * as TreeViewUtils from '../../plugins/utils/tree-view-utils';
 import {
@@ -261,6 +262,10 @@ let viewModel = canMap.extend({
       tracker.USER_ACTIONS.TREEVIEW.FILTER);
     this.attr('pageInfo.current', 1);
     this.refresh().then(stopFn);
+    pubSub.dispatch({
+      ...CURRENT_FILTER_UPDATED,
+      currentFilter: this.currentFilter,
+    });
   },
   getDepthFilter: function (deepLevel) {
     let filters = makeArray(this.attr('filters'));

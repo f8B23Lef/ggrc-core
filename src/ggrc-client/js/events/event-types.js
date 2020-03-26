@@ -297,6 +297,16 @@ const DEFERRED_MAPPED_UNMAPPED = {
   type: 'deferredMappedUnmapped',
 };
 
+/**
+ * Notifies that current filter was updated.
+ * @event currentFilterUpdated
+ * @type {object}
+ * @property {object} object - Current filter object.
+ */
+const CURRENT_FILTER_UPDATED = {
+  type: 'currentFilterUpdated',
+};
+
 export {
   REFRESHED,
   REFRESH_SUB_TREE,
@@ -326,4 +336,5 @@ export {
   DEFERRED_MAPPED_UNMAPPED,
   OBJECT_DESTROYED,
   UNMAP_DESTROYED_OBJECT,
+  CURRENT_FILTER_UPDATED,
 };

@@ -123,6 +123,7 @@ export default canComponent.extend({
     parentInstance: null,
     options: null,
     model: null,
+    currentFilter: null,
     showedItems: [],
     savedSearchPermalink: '',
     pubSub,

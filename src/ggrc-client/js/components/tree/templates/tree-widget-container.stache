@@ -25,6 +25,7 @@
     <tree-actions parentInstance:from="parent_instance"
                   options:from="options"
                   model:from="model"
+                  currentFilter:from="currentFilter"
                   showedItems:from="showedItems"
                   on:vm:export="export()">
     </tree-actions>

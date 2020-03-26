@@ -6,4 +6,5 @@
 <assessment-tree-actions 
   instance:from="instance"
   parentInstance:from="parentInstance"
+  currentFilter:from="currentFilter"
   model:from="model" />
