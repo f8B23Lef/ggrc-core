@@ -6,20 +6,13 @@
 import canMap from 'can-map';
 import canComponent from 'can-component';
 import canStache from 'can-stache';
-import template from './assessments-bulk-completion-button.stache';
-import pubSub from '../../../pub-sub';
+import template from './assessments-bulk-complete-container.stache';
 
 const viewModel = canMap.extend({
-  enabled: false,
-  parentInstance: null,
-  pubSub: pubSub,
-  openBulkCompleteModal() {
-    this.pubSub.dispatch('enableBulkCompleteMode');
-  },
 });
 
 export default canComponent.extend({
-  tag: 'assessments-bulk-complete-button',
+  tag: 'assessments-bulk-complete-container',
   view: canStache(template),
   viewModel,
 });

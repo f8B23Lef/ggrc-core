@@ -35,6 +35,7 @@ import '../create-document-button/create-document-button';
 import '../assessment/assessment-generator-button';
 import '../last-comment/last-comment';
 import '../tree-view-filter/tree-view-filter';
+import '../assessment/assessments-bulk-complete-container/assessments-bulk-complete-container';
 
 import template from './templates/tree-widget-container.stache';
 import * as StateUtils from '../../plugins/utils/state-utils';
@@ -144,6 +145,7 @@ let viewModel = canMap.extend({
   $el: null,
   loading: false,
   refetch: false,
+  bulkCompleteModeEnabled: false,
   columns: {
     selected: [],
     available: [],
@@ -652,6 +654,9 @@ export default canComponent.extend({
     },
     '{pubSub} createdCycleTaskGroup'() {
       this.viewModel.loadItems();
+    },
+    '{pubSub} enableBulkCompleteMode'() {
+      this.viewModel.attr('bulkCompleteModeEnabled', true);
     },
     '{pubSub} refetchOnce'(scope, event) {
       if (event.modelNames.includes(this.viewModel.attr('modelName'))) {
