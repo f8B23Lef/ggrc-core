@@ -42,8 +42,8 @@ table-view {
 
   .table-view__cell {
     position: relative;
-    min-width: 200px;
-    max-width: 200px;
+    min-width: 270px;
+    max-width: 270px;
     padding: 15px 20px 15px 30px;
   }
 
@@ -54,6 +54,29 @@ table-view {
 
   .cell-content {
     line-height: 16px;
+
+    .ui-autocomplete,
+    .dropdown-wrap-text__body,
+    .multiselect-dropdown__body {
+      z-index: 45;
+    }
+
+    .datepicker__calendar {
+      z-index: 45;
+
+      &--top {
+        bottom: auto;
+      }
+    }
+  }
+
+  .cell-attribute {
+    display: flex;
+    width: 100%;
+
+    custom-attributes-field {
+      flex: 1;
+    }
   }
 
   .icon__wrapper {
@@ -78,7 +101,7 @@ table-view-header {
       rgba(224, 224, 224, 1) 99%,
       rgba(204, 204, 204, 0.9) 99%,
       rgba(224, 224, 224, 1) 100%);
-    z-index: 5;
+    z-index: 50;
   }
 
   .field__mandatory {
@@ -98,7 +121,7 @@ table-view-row {
       rgba(255, 255, 255, 1) 99%,
       rgba(204, 204, 204, 0.9) 99%,
       rgba(255, 255, 255, 1) 100%);
-    z-index: 5;
+    z-index: 50;
   }
 
   .fa-check {

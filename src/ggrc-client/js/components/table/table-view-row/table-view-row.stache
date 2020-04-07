@@ -36,7 +36,17 @@
   {{#each rowData.attributes}}
     <td class="table-view__cell">
       {{#if isApplicable}}
-        {{value}}
+        <div class="cell-content__wrapper">
+          <div class="cell-content cell-attribute">
+            <custom-attributes-field
+              isLocalCa:from="true"
+              type:from="type"
+              value:bind="value"
+              fieldId:from="id"
+              options:from="multiChoiceOptions.values"
+              class="form-field__content custom-attribute-{{type}}" />
+          </div>
+        </div> 
       {{else}}
         <span class="empty-message">Not applicable</span>
       {{/if}}
