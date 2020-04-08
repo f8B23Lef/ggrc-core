@@ -37,6 +37,9 @@
     <td class="table-view__cell">
       {{#if isApplicable}}
         <div class="cell-content__wrapper">
+          <div class="icon__wrapper">
+            <form-validation-icon validation:from="validation" />
+          </div>
           <div class="cell-content cell-attribute">
             <custom-attributes-field
               isLocalCa:from="true"
@@ -44,6 +47,7 @@
               value:bind="value"
               fieldId:from="id"
               options:from="multiChoiceOptions.values"
+              on:vm:valueChanged="attributeValueChanged(scope.event.value, scope.index)"
               class="form-field__content custom-attribute-{{type}}" />
           </div>
         </div> 
