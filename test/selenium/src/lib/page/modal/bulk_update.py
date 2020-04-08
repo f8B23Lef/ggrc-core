@@ -60,8 +60,15 @@ class FilterSection(page_elements.CollapsiblePanel):
   """Represents collapsible filter section."""
 
   def __init__(self, parent_element):
+    super(FilterSection, self).__init__(parent_element)
     self._root = parent_element.element(
         tag_name="collapsible-panel", text=re.compile("FILTER"))
+
+  def is_state_filter_disabled(self):
+    """Returns whether state filter disabled."""
+    return "disabled" in self._root.element(
+        class_name="multiselect-dropdown__input-container").get_attribute(
+        "class")
 
   def get_state_filter_options(self):
     """Returns options list from state filter."""
@@ -135,6 +142,7 @@ class SelectAssessmentsToVerifySection(page_elements.CollapsiblePanel):
   """Represents 'Select assessments' section."""
 
   def __init__(self, parent_element):
+    super(SelectAssessmentsToVerifySection, self).__init__(parent_element)
     self._root = parent_element.element(
         tag_name="collapsible-panel", text=re.compile("SELECT ASSESSMENTS"))
 
@@ -159,7 +167,6 @@ class SelectAssessmentsToVerifySection(page_elements.CollapsiblePanel):
   @decorator.execute_on_all_pagination_pages
   def _extend_scopes(self, scopes, with_second_tier_info):
     """Extends scopes with scopes from current page of tree view."""
-    self.tree_view.wait_loading_after_actions()
     scopes_from_page = self.tree_view.get_list_members_as_list_scopes()
     if with_second_tier_info:
       for scope in scopes_from_page:
@@ -194,7 +201,6 @@ class BulkUpdateTreeView(base.UnifiedMapperTreeView):
       list of AssessmentTreeViewItem entities or empty list if no items found
       in tree view.
     """
-    self.wait_loading_after_actions()
     self._tree_view_items = (
         [] if self._browser.div(class_name="well well-small").exists else [
             AssessmentTreeViewItem(element)
