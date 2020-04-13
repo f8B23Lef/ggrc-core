@@ -3,9 +3,11 @@
   Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 */
 
+import canMap from 'can-map';
 import * as AjaxExtensions from '../../ajax-extensions';
-import service, {getAsmtCountForVerify} from '../../utils/bulk-update-service';
+import service, {getAsmtCountForVerify, getFiltersForCompletion, getAsmtCountForCompletion} from '../../utils/bulk-update-service';
 import * as QueryApiUtils from '../../utils/query-api-utils';
+import * as BulkUpdateService from '../../utils/bulk-update-service';
 
 describe('GGRC BulkUpdateService', function () {
   describe('update() method', function () {
@@ -119,6 +121,201 @@ describe('GGRC BulkUpdateService', function () {
         expect(count).toEqual(3);
         done();
       });
+    });
+  });
+
+  describe('getFiltersForCompletion() method', () => {
+    it('returns correct filter when current filter is undefined', () => {
+      const filters = [{
+        expression: {
+          left: {
+            left: 'assignees',
+            op: {
+              name: '~',
+            },
+            right: GGRC.current_user.email,
+          },
+          op: {
+            name: 'AND',
+          },
+          right: {
+            left: {
+              left: 'status',
+              op: {
+                name: 'IN',
+              },
+              right: [
+                'Not Started',
+                'In Progress',
+                'Rework Needed',
+              ],
+            },
+            op: {
+              name: 'AND',
+            },
+            right: {
+              left: {
+                left: 'sox_302_enabled',
+                op: {
+                  name: '=',
+                },
+                right: 'yes',
+              },
+              op: {
+                name: 'AND',
+              },
+              right: {
+                left: 'archived',
+                op: {
+                  name: '=',
+                },
+                right: 'No',
+              },
+            },
+          },
+        },
+      }];
+      expect(getFiltersForCompletion(undefined)).toEqual(filters);
+    });
+
+    it('returns correct filter when current filter is defined', () => {
+      const currentFilter = {
+        filter: {
+          type: 'Audit',
+          id: '1',
+        },
+      };
+      const filters = [{
+        expression: {
+          left: {
+            left: 'assignees',
+            op: {
+              name: '~',
+            },
+            right: GGRC.current_user.email,
+          },
+          op: {
+            name: 'AND',
+          },
+          right: {
+            left: {
+              left: 'status',
+              op: {
+                name: 'IN',
+              },
+              right: [
+                'Not Started',
+                'In Progress',
+                'Rework Needed',
+              ],
+            },
+            op: {
+              name: 'AND',
+            },
+            right: {
+              left: {
+                left: 'sox_302_enabled',
+                op: {
+                  name: '=',
+                },
+                right: 'yes',
+              },
+              op: {
+                name: 'AND',
+              },
+              right: {
+                left: 'archived',
+                op: {
+                  name: '=',
+                },
+                right: 'No',
+              },
+            },
+          },
+        },
+      }, currentFilter.filter];
+      expect(getFiltersForCompletion(new canMap(currentFilter)))
+        .toEqual(filters);
+    });
+  });
+
+  describe('getAsmtCountForCompletion() method', () => {
+    let filters;
+
+    beforeEach(() => {
+      filters = [{
+        expression: {
+          left: {
+            left: 'assignees',
+            op: {
+              name: '~',
+            },
+            right: GGRC.current_user.email,
+          },
+          op: {
+            name: 'AND',
+          },
+          right: {
+            left: {
+              left: 'status',
+              op: {
+                name: 'IN',
+              },
+              right: [
+                'Not Started',
+                'In Progress',
+                'Rework Needed',
+              ],
+            },
+            op: {
+              name: 'AND',
+            },
+            right: {
+              left: {
+                left: 'sox_302_enabled',
+                op: {
+                  name: '=',
+                },
+                right: 'yes',
+              },
+              op: {
+                name: 'AND',
+              },
+              right: {
+                left: 'archived',
+                op: {
+                  name: '=',
+                },
+                right: 'No',
+              },
+            },
+          },
+        },
+      }];
+    });
+
+    it('returns deferred object with assessments count', async () => {
+      spyOn(BulkUpdateService, 'getFiltersForCompletion')
+        .and.returnValue(filters);
+      spyOn(QueryApiUtils, 'buildParam').withArgs(
+        'Assessment',
+        {},
+        null,
+        [],
+        filters)
+        .and.returnValue({});
+      spyOn(QueryApiUtils, 'batchRequests').withArgs({
+        type: 'count',
+        permissions: 'update',
+      })
+        .and.returnValue(Promise.resolve({
+          Assessment: {
+            count: 3,
+          },
+        }));
+
+      const count = await getAsmtCountForCompletion();
+      expect(count).toEqual(3);
     });
   });
 });
