@@ -5,7 +5,7 @@
 
 import Component from '../table-view';
 import {getComponentVM} from '../../../../../js_specs/spec-helpers';
-import * as CAUtils from '../../../../plugins/utils/ca-utils';
+import * as CaUtils from '../../../../plugins/utils/ca-utils';
 
 describe('table-view component', () => {
   let viewModel;
@@ -14,7 +14,7 @@ describe('table-view component', () => {
     viewModel = getComponentVM(Component);
   });
 
-  describe('headersData getter', () => {
+  describe('buildHeadersData() method', () => {
     it('returns formed array for headers data', () => {
       viewModel.attributesList = [{
         title: 'Title1',
@@ -26,7 +26,7 @@ describe('table-view component', () => {
         default_value: '',
       }];
 
-      expect(viewModel.headersData.serialize()).toEqual([{
+      expect(viewModel.buildHeadersData().serialize()).toEqual([{
         title: 'Title1',
         mandatory: true,
       }, {
@@ -67,12 +67,12 @@ describe('table-view component', () => {
         },
       }];
 
-      spyOn(CAUtils, 'getCustomAttributeType').and.returnValue('input');
+      spyOn(CaUtils, 'getCustomAttributeType').and.returnValue('input');
 
       spyOn(viewModel, 'prepareAttributeValue')
         .withArgs('input', '')
         .and.returnValue('')
-        .withArgs('input', 'Some text')
+        .withArgs('input', 'Some text', null)
         .and.returnValue('Some text');
 
       spyOn(viewModel, 'prepareMultiChoiceOptions')
@@ -99,6 +99,7 @@ describe('table-view component', () => {
             values: [],
             config: new Map(),
           },
+          attachments: null,
           modified: false,
           validation: {
             mandatory: false,
@@ -124,6 +125,7 @@ describe('table-view component', () => {
             values: [],
             config: new Map(),
           },
+          attachments: null,
           modified: false,
           validation: {
             mandatory: false,
@@ -158,9 +160,38 @@ describe('table-view component', () => {
       });
     });
 
-    describe('if type is not "checkbox" or "date"', () => {
+    describe('if type is "multiselect"', () => {
       it('should return value', () => {
-        expect(viewModel.prepareAttributeValue('person', 123)).toBe(123);
+        expect(viewModel.prepareAttributeValue('multiselect', '1,2,3'))
+          .toBe('1,2,3');
+      });
+
+      it('should return ""', () => {
+        expect(viewModel.prepareAttributeValue('multiselect', '')).toBe('');
+      });
+    });
+
+    describe('if type is "person"', () => {
+      it('should return formed array with needed data about person', () => {
+        expect(viewModel.prepareAttributeValue('person', null, 384))
+          .toEqual([{
+            id: 384,
+            type: 'Person',
+            href: '/api/people/384',
+            context_id: null,
+          }]);
+      });
+
+      it('should return "null"', () => {
+        expect(viewModel.prepareAttributeValue('person', null, null))
+          .toBeNull();
+      });
+    });
+
+    describe('for default block', () => {
+      it('should return value', () => {
+        expect(viewModel.prepareAttributeValue('input', 'Some text'))
+          .toBe('Some text');
       });
     });
   });
@@ -195,6 +226,38 @@ describe('table-view component', () => {
 
     it('returns empty array if parameter is not "string" type', () => {
       expect(viewModel.convertToArray(123)).toEqual([]);
+    });
+  });
+
+  describe('init() method', () => {
+    let rowsData;
+
+    beforeEach(() => {
+      viewModel.headersData = [];
+      viewModel.rowsData = [];
+      spyOn(viewModel, 'buildHeadersData').and.returnValue(['LCA1, LCA2']);
+      rowsData = [{
+        attributes: [{
+          id: 1,
+          type: 'input',
+        }, {
+          id: 2,
+          type: 'text',
+        }],
+      }];
+      spyOn(viewModel, 'buildRowsData').and.returnValue(rowsData);
+    });
+
+    it('sets result of buildHeadersData() to headersData attribute', () => {
+      viewModel.init();
+
+      expect(viewModel.headersData.serialize()).toEqual(['LCA1, LCA2']);
+    });
+
+    it('sets result of buildRowsData() to rowsData attribute', () => {
+      viewModel.init();
+
+      expect(viewModel.rowsData.serialize()).toEqual(rowsData);
     });
   });
 });
