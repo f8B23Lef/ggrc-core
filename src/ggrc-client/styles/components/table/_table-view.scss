@@ -114,14 +114,27 @@ table-view-row {
   line-height: 16px;
   border-bottom: 1px solid $itemBorder;
 
-  .table-view__subtable_sticky {
-    position: sticky;
-    left: 0;
-    background: linear-gradient(90deg,
-      rgba(255, 255, 255, 1) 99%,
-      rgba(204, 204, 204, 0.9) 99%,
-      rgba(255, 255, 255, 1) 100%);
-    z-index: 50;
+  .table-view {
+    &__row_ready {
+      background-color: #f6fafd;
+
+      .table-view__subtable_sticky {
+        background: linear-gradient(90deg,
+        rgba(246, 250, 253, 1) 99%,
+        rgba(204, 204, 204, 0.9) 99%,
+        rgba(246, 250, 253, 1) 100%);
+      }
+    }
+
+    &__subtable_sticky {
+      position: sticky;
+      left: 0;
+      background: linear-gradient(90deg,
+        rgba(255, 255, 255, 1) 99%,
+        rgba(204, 204, 204, 0.9) 99%,
+        rgba(255, 255, 255, 1) 100%);
+      z-index: 50;
+    }
   }
 
   .fa-check {

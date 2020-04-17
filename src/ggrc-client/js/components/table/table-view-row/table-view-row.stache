@@ -3,13 +3,13 @@
     Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 }}
 
-<tr>
+<tr {{#if rowData.isReadyToComplete}}class="table-view__row_ready"{{/if}}>
   <th class="table-view__subtable_sticky">
     <table>
       <tr>
         <td class="table-view__cell">
           <div class="cell-content__wrapper">
-            {{#if isReadyForCompletion}}
+            {{#if rowData.isReadyToComplete}}
               <div class="icon__wrapper">
                 <i class="fa fa-check blue"></i>
               </div>

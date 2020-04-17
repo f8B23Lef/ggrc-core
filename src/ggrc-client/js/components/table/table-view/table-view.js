@@ -41,6 +41,7 @@ const ViewModel = canDefineMap.extend({seal: false}, {
         asmtTitle: assessment.title,
         asmtStatus: assessment.status,
         asmtType: assessment.assessment_type,
+        isReadyToComplete: false,
       };
       const attributesData = [];
 
