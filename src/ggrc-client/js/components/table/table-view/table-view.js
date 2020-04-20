@@ -79,6 +79,7 @@ const ViewModel = canDefineMap.extend({seal: false}, {
             values: optionsList,
             config: optionsConfig,
           },
+          attachments: null,
           modified: false,
           validation: {
             mandatory: attribute.mandatory,
