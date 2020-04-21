@@ -102,6 +102,7 @@ const ViewModel = canDefineMap.extend({seal: false}, {
     pubSub.dispatch({
       type: 'attributeModified',
       assessmentData: this.rowData,
+      attribute,
     });
   },
   showRequiredInfo(index) {
@@ -145,10 +146,13 @@ const ViewModel = canDefineMap.extend({seal: false}, {
     this.validateRequiredInfo(attribute);
     this.rowData.isReadyToComplete = this.checkAssessmentReadinessToComplete();
 
-    pubSub.dispatch({
-      type: 'attributeModified',
-      assessmentData: this.rowData,
-    });
+    if (attribute.validation.valid) {
+      pubSub.dispatch({
+        type: 'attributeModified',
+        assessmentData: this.rowData,
+        attribute,
+      });
+    }
   },
   validateRequiredInfo(attribute) {
     const {comment, attachment, url} = this.getRequiredInfoStates(attribute);
@@ -190,7 +194,8 @@ export default canComponent.extend({
       if (this.viewModel.rowData.isReadyToComplete) {
         pubSub.dispatch({
           type: 'assessmentReadyToComplete',
-          assessmentId: this.viewModel.rowData.asmtId,
+          asmtId: this.viewModel.rowData.asmtId,
+          asmtSlug: this.viewModel.rowData.asmtSlug,
         });
       }
     },

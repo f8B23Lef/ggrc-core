@@ -57,6 +57,7 @@ const ViewModel = canDefineMap.extend({seal: false}, {
         asmtTitle: assessment.title,
         asmtStatus: assessment.status,
         asmtType: assessment.assessment_type,
+        asmtSlug: assessment.slug,
         isReadyToComplete: false,
       };
       const attributesData = [];
@@ -156,4 +157,12 @@ export default canComponent.extend({
   tag: 'table-view',
   view: canStache(template),
   ViewModel,
+  events: {
+    '{viewModel} assessmentsList'() {
+      this.viewModel.rowsData = this.viewModel.rowsData.filter((item) => {
+        return Object.values(this.viewModel.assessmentsList)
+          .find(({id}) => item.asmtId===id);
+      });
+    },
+  },
 });

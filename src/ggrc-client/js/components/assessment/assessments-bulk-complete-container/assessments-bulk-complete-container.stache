@@ -3,27 +3,40 @@
     Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 }}
 
-<div class="flex-box flex-col">
-  <spinner-component toggle:from="isLoading" size:from="'large'" class="bulk-complete-spinner"/>
-  {{#if isDataLoaded}}
-    <div class="flex-box flex-row bulk-complete-header">
-      <div class="alert alert-nomargin bulk-complete-header__alert">
-           Below are listed SOX 302 certifications in statuses "Not Started", "In Progress", "Rework Needed" that are assigned on you.
+{{#unless isGridEmpty}}
+  <div class="flex-box flex-col">
+    <spinner-component toggle:from="isLoading" size:from="'large'" class="bulk-complete-spinner"/>
+    {{^if isLoading}}
+      <div class="flex-box flex-row bulk-complete-header">
+        <div class="alert alert-nomargin bulk-complete-header__alert">
+            Below are listed SOX 302 certifications in statuses "Not Started", "In Progress", "Rework Needed" that are assigned on you.
+        </div>
+        <div class="bulk-complete-header__action">
+            <button type="button" class="btn btn-white">
+              Exit bulk completion
+            </button>
+
+            <button type="button" {{#unless isAttributeModified}}disabled{{/unless}} class="btn btn-white">
+              Save answers
+            </button>
+
+            <button 
+              type="button" 
+              {{#unless isCompleteButtonEnabled}}disabled{{/unless}}
+              class="btn btn-darkBlue"
+              on:el:click="onCompleteClick()">
+              Complete ({{assessmentsCountsToComplete}})
+            </button>
+        </div> 
       </div>
-      <div class="bulk-complete-header__action">
-          <button type="button" class="btn btn-white">
-            Exit bulk completion
-          </button>
-
-          <button type="button" {{#unless isAttributeModified}}disabled{{/unless}} class="btn btn-white">
-            Save answers
-          </button>
-
-          <button type="button" {{#unless isCompleteButtonEnabled}}disabled{{/unless}} class="btn btn-darkBlue">
-            Complete ({{countAssessmentsToComplete}})
-          </button>
-      </div> 
-    </div>
-    <table-view assessmentsList:from="assessmentsList" attributesList:from="attributesList" />
-  {{/if}}
-</div>
+      <table-view assessmentsList:from="assessmentsList" attributesList:from="attributesList" />
+    {{/if}}
+  </div>
+{{else}}
+  <div class="bulk-complete-empty-grid">
+    <div>There are no records available for bulk update and completion</div>
+    <button type="button" class="btn btn-white">
+      Exit bulk completion
+    </button>
+  </div>
+{{/unless}}
