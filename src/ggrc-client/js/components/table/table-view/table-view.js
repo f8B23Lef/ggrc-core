@@ -9,6 +9,7 @@ import canStache from 'can-stache';
 import template from './table-view.stache';
 import '../table-view-header/table-view-header';
 import '../table-view-row/table-view-row';
+import '../../required-info-modal/required-info-modal';
 import {
   getCustomAttributeType,
 } from '../../../plugins/utils/ca-utils';
@@ -25,6 +26,21 @@ const ViewModel = canDefineMap.extend({seal: false}, {
   },
   rowsData: {
     value: () => [],
+  },
+  requiredInfoModal: {
+    value: () => ({
+      title: '',
+      state: {
+        open: false,
+      },
+      content: {
+        attribute: null,
+        requiredInfo: null,
+        commentValue: null,
+        urls: [],
+        files: [],
+      },
+    }),
   },
   buildHeadersData() {
     return this.attributesList.map((attribute) => ({

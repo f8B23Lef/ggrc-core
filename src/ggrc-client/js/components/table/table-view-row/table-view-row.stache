@@ -52,11 +52,12 @@
             {{#if attachments}}
               <div class="form-field__validation-hint-placeholder">
                 <button type="button"
-                  class="btn btn-small btn-link btn-link-nopadding">
+                  class="btn btn-small btn-link btn-link-nopadding"
+                  on:el:click="showRequiredInfo(scope.index)">
                   {{#if validation.hasMissingInfo}}
-                    Add required info
+                    Add info
                   {{else}}
-                    Edit required info
+                    Edit info
                   {{/if}}
                 </button>
               </div>
