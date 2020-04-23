@@ -16,6 +16,7 @@
   {{else}}
     <dropdown-component name:bind="inputValue"
       isDisabled:from="disabled"
+      isReadonlyInlineContent:from="isReadonlyInlineContent"
       optionsList:from="options"
       isGroupedDropdown:from="isGroupedDropdown"
       optionsGroups:from="dropdownOptionsGroups"

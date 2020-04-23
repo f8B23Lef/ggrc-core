@@ -3,24 +3,32 @@
   Licensed under http://www.apache.org/licenses/LICENSE-2.0 <see LICENSE file>
 }}
 
-<select
-  tabindex="{{tabIndex}}"
-  class="{{firstnonempty className 'input-block-level'}}"
-  el:value:bind="name"
-  on:el:change="onChange"
-  {{#isDisabled}}disabled="disabled"{{/isDisabled}}
-  {{#controlId}}id="{{controlId}}"{{/controlId}}
-  >
-    {{#each options}}
-      {{#if ./title}}
-        <option value="{{value}}">{{title}}</option>
-      {{/if}}
-      {{#if group}}
-        <optgroup label="{{group}}">
-        {{#subitems}}
+{{#unless isReadOnly}}
+  <select
+    tabindex="{{tabIndex}}"
+    class="{{firstnonempty className 'input-block-level'}}"
+    el:value:bind="name"
+    on:el:change="onChange"
+    {{#isDisabled}}disabled="disabled"{{/isDisabled}}
+    {{#controlId}}id="{{controlId}}"{{/controlId}}
+    >
+      {{#each options}}
+        {{#if ./title}}
           <option value="{{value}}">{{title}}</option>
-        {{/subitems}}
-        </optgroup>
-      {{/if}}
-    {{/each}}
-</select>
+        {{/if}}
+        {{#if group}}
+          <optgroup label="{{group}}">
+          {{#subitems}}
+            <option value="{{value}}">{{title}}</option>
+          {{/subitems}}
+          </optgroup>
+        {{/if}}
+      {{/each}}
+  </select>
+{{else}}
+  {{#if name}}
+    <read-more text:from="name"/>
+  {{else}}
+    <p>{{noValueLabel}}</p>
+  {{/if}}
+{{/unless}}

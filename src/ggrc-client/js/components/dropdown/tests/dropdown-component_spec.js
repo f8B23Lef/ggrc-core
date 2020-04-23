@@ -166,7 +166,7 @@ describe('dropdown component', function () {
 
       viewModel.attr('optionsList', optionsList);
       viewModel.attr('noValue', true);
-      viewModel.attr('noValueLabel', '');
+      viewModel.attr('noValueLabel', '--');
       list = viewModel.attr('options');
 
       expect(list.length).toEqual(4);
@@ -192,7 +192,7 @@ describe('dropdown component', function () {
       viewModel.attr('optionsGroups', optionsGroups);
       viewModel.attr('isGroupedDropdown', true);
       viewModel.attr('noValue', true);
-      viewModel.attr('noValueLabel', '');
+      viewModel.attr('noValueLabel', '--');
       list = viewModel.attr('options');
 
       expect(list.length).toEqual(3);

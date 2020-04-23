@@ -26,7 +26,7 @@ export default canComponent.extend({
         get: function () {
           let isGroupedDropdown = this.attr('isGroupedDropdown');
           let optionsGroups = this.attr('optionsGroups');
-          let noneValue = this.attr('noValueLabel') || '--';
+          let noneValue = this.attr('noValueLabel');
           let none = isGroupedDropdown ?
             [{
               group: noneValue,
@@ -69,12 +69,19 @@ export default canComponent.extend({
           return list;
         },
       },
+      isReadOnly: {
+        get() {
+          return this.attr('isReadonlyInlineContent')
+            && this.attr('isDisabled');
+        },
+      },
     },
     name: '',
     className: '',
+    isReadonlyInlineContent: false,
     onChange: $.noop,
     noValue: '',
-    noValueLabel: '',
+    noValueLabel: '--',
     controlId: '',
     isGroupedDropdown: false,
     tabIndex: 0,

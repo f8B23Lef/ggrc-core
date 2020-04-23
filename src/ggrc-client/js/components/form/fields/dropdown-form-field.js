@@ -51,6 +51,7 @@ export default canComponent.extend({
       },
     },
     isLocalCa: false,
+    isReadonlyInlineContent: false,
     _value: '',
     options: [],
     isGroupedDropdown: false,
