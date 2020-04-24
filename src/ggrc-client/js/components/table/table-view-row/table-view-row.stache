@@ -49,7 +49,7 @@
               options:from="multiChoiceOptions.values"
               on:vm:valueChanged="attributeValueChanged(scope.event.value, scope.index)"
               class="form-field__content custom-attribute-{{type}}" />
-            {{#if attachments}}
+            {{#if validation.requiresAttachment}}
               <div class="form-field__validation-hint-placeholder">
                 <button type="button"
                   class="btn btn-small btn-link btn-link-nopadding"
