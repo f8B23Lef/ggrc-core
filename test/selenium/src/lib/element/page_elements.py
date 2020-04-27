@@ -6,7 +6,7 @@ import time
 
 from lib.constants import objects
 from lib.constants.element import AdminWidgetCustomAttributes
-from lib.utils import selenium_utils, ui_utils, date_utils
+from lib.utils import selenium_utils, ui_utils, date_utils, string_utils
 
 
 class InlineEdit(object):
@@ -312,8 +312,11 @@ class CustomAttribute(object):
       value = self._ca_strategy.get_lcas_from_inline()
     empty_string_strategies = (
         TextCAActionsStrategy, RichTextCAActionsStrategy,
-        MultiselectCAActionsStrategy, DropdownCAActionsStrategy)
+        MultiselectCAActionsStrategy)
     if isinstance(self._ca_strategy, empty_string_strategies) and value == "":
+      return None
+    elif (isinstance(self._ca_strategy, DropdownCAActionsStrategy) and
+          value == string_utils.Symbols.ENDASH * 2):
       return None
     elif (isinstance(self._ca_strategy, DateCAActionsStrategy) and
           value not in ("", "None")):
@@ -493,7 +496,7 @@ class DropdownCAActionsStrategy(CAActionsStrategy):
 
   def _gcas_input(self):
     """Gets global custom attribute input element."""
-    return self._root.select(class_name="input-block-level")
+    return self._root.div(class_name="input-wrapper")
 
   def _lcas_input(self):
     """Gets local custom attribute input element."""
@@ -501,7 +504,7 @@ class DropdownCAActionsStrategy(CAActionsStrategy):
 
   def get_gcas_from_inline(self):
     """Gets value of inline GCA field."""
-    return self._gcas_input().value
+    return self._gcas_input().text
 
   def get_lcas_from_inline(self):
     """Gets value of inline LCA field."""
@@ -515,7 +518,7 @@ class DropdownCAActionsStrategy(CAActionsStrategy):
 
   def _fill_input_field(self, value):
     """Fills input field."""
-    self._gcas_input().select(value)
+    self._gcas_input().select().select(value)
 
 
 class PersonCAActionsStrategy(CAActionsStrategy):

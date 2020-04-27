@@ -27,6 +27,7 @@ class Symbols(object):
   AT_SIGN = "@"
   PLUS = "+"
   EM_DASH = u"—"
+  ENDASH = "-"
 
   def __init__(self, additional_exclude=''):
     """Create symbols sets.
