@@ -138,7 +138,7 @@ const ViewModel = canDefineMap.extend({
           const comment = attachments.comment ? {
             description: attachments.comment,
             modified_by: {type: 'Person', id: GGRC.current_user.id},
-          } : '';
+          } : {};
           extra = {
             urls,
             files,
