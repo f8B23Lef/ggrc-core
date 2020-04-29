@@ -28,6 +28,15 @@ const COMPLETION_MESSAGES = {
    Please refresh the page and start bulk complete again.`,
 };
 
+const SAVE_ANSWERS_MESSAGES = {
+  start: `Saving answers to the certifications. 
+   Once it is done you will get a notification. 
+   You can continue working with the app.`,
+  success: 'Answers to the certifications are saved successfully.',
+  fail: `Failed to save certifications' answers.
+   Please try to save them again.`,
+};
+
 const ViewModel = canDefineMap.extend({
   currentFilter: {
     value: null,
@@ -95,6 +104,21 @@ const ViewModel = canDefineMap.extend({
     this.attributesList = attributes;
     this.isLoading = false;
   },
+  onSaveAnswersClick() {
+    backendGdriveClient.withAuth(
+      () => ggrcPost(
+        '/api/bulk_operations/cavs/save',
+        this.buildBulkRequest(true)),
+      {responseJSON: {message: 'Unable to Authorize'}})
+      .then(({id}) => {
+        if (id) {
+          this.isAttributeModified = false;
+          this.trackBackgroundTask(id, SAVE_ANSWERS_MESSAGES);
+        } else {
+          notifier('error', SAVE_ANSWERS_MESSAGES.fail);
+        }
+      });
+  },
   onCompleteClick() {
     confirm({
       modal_title: 'Confirmation',
@@ -109,7 +133,7 @@ const ViewModel = canDefineMap.extend({
     backendGdriveClient.withAuth(
       () => ggrcPost(
         '/api/bulk_operations/complete',
-        this.buildBulkCompleteRequest()),
+        this.buildBulkRequest()),
       {responseJSON: {message: 'Unable to Authorize'}})
       .then(({id}) => {
         if (id) {
@@ -121,7 +145,7 @@ const ViewModel = canDefineMap.extend({
         }
       });
   },
-  buildBulkCompleteRequest(isSaveAnswersRequest = false) {
+  buildBulkRequest(isSaveAnswersRequest = false) {
     const attributesListToSave = [];
     this.assessmentsToSave.forEach((value, asmtId) => {
       const {slug, attributes} = value;

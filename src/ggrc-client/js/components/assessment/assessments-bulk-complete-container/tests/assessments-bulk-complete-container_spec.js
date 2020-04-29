@@ -152,7 +152,7 @@ describe('assessments-bulk-complete-container component', () => {
     });
   });
 
-  describe('buildBulkCompleteRequest() method', () => {
+  describe('buildBulkRequest() method', () => {
     it('returns correct request data for complete', () => {
       const readyToCompleteAsmts = [1, 3];
       viewModel.assessmentIdsToComplete = new Set(readyToCompleteAsmts);
@@ -191,7 +191,7 @@ describe('assessments-bulk-complete-container component', () => {
         }),
       });
 
-      const request = viewModel.buildBulkCompleteRequest();
+      const request = viewModel.buildBulkRequest();
 
       expect(request).toEqual({
         assessments_ids: readyToCompleteAsmts,
