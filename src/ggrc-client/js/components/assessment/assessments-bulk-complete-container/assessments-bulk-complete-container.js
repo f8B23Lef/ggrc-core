@@ -37,6 +37,19 @@ const SAVE_ANSWERS_MESSAGES = {
    Please try to save them again.`,
 };
 
+/**
+ * Map of types from FE to BE format
+ */
+const attributesType = {
+  input: 'text',
+  text: 'text',
+  person: 'map:person',
+  date: 'date',
+  checkbox: 'checkbox',
+  multiselect: 'multiselect',
+  dropdown: 'dropdown',
+};
+
 const ViewModel = canDefineMap.extend({
   currentFilter: {
     value: null,
@@ -61,6 +74,9 @@ const ViewModel = canDefineMap.extend({
   },
   isAttributeModified: {
     value: false,
+  },
+  sortingInfo: {
+    value: () => {},
   },
   isCompleteButtonEnabled: {
     get() {
@@ -91,7 +107,13 @@ const ViewModel = canDefineMap.extend({
     }
     const filter =
       getFiltersForCompletion(this.currentFilter, relevant);
-    const param = buildParam('Assessment', {}, relevant, [], filter);
+    const page = {
+      sort: [{
+        key: this.sortingInfo.sortBy,
+        direction: this.sortingInfo.sortDirection,
+      }],
+    };
+    const param = buildParam('Assessment', page, relevant, [], filter);
     param.type = 'ids';
     this.asmtListRequest = param;
   },
@@ -138,6 +160,7 @@ const ViewModel = canDefineMap.extend({
       .then(({id}) => {
         if (id) {
           this.assessmentsCountsToComplete = 0;
+          this.isAttributeModified = false;
           this.trackBackgroundTask(id, COMPLETION_MESSAGES);
           this.cleanUpGridAfterCompletion();
         } else {
@@ -174,7 +197,7 @@ const ViewModel = canDefineMap.extend({
             attribute.type,
             attribute.value),
           title: attribute.title,
-          type: attribute.type,
+          type: attributesType[attribute.type],
           definition_id: asmtId,
           id: attribute.id,
           extra,
@@ -200,6 +223,8 @@ const ViewModel = canDefineMap.extend({
         return value ? '1' : '0';
       case 'date':
         return value || '';
+      case 'person':
+        return value ? value.serialize() : [];
       default:
         return value;
     }

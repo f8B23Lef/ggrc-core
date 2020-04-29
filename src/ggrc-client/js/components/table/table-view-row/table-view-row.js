@@ -146,13 +146,11 @@ const ViewModel = canDefineMap.extend({seal: false}, {
     this.validateRequiredInfo(attribute);
     this.rowData.isReadyToComplete = this.checkAssessmentReadinessToComplete();
 
-    if (attribute.validation.valid) {
-      pubSub.dispatch({
-        type: 'attributeModified',
-        assessmentData: this.rowData,
-        attribute,
-      });
-    }
+    pubSub.dispatch({
+      type: 'attributeModified',
+      assessmentData: this.rowData,
+      attribute,
+    });
   },
   validateRequiredInfo(attribute) {
     const {comment, attachment, url} = this.getRequiredInfoStates(attribute);
