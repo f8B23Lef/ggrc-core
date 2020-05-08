@@ -44,15 +44,18 @@ const ViewModel = canDefineMap.extend({seal: false}, {
     validation.requiresAttachment = requiresAttachment;
 
     if (requiresAttachment) {
-      attribute.attachments = {
-        comment: null,
-        files: [],
-        urls: [],
-      };
-      validation.valid = false;
-      validation.hasMissingInfo = true;
+      if (attribute.attachments) {
+        this.validateRequiredInfo(attribute);
+      } else {
+        attribute.attachments = {
+          comment: null,
+          files: [],
+          urls: [],
+        };
+        validation.valid = false;
+        validation.hasMissingInfo = true;
+      }
     } else {
-      attribute.attachments = null;
       validation.valid = validation.mandatory ? attribute.value !== '' : true;
       validation.hasMissingInfo = false;
     }
@@ -136,8 +139,40 @@ const ViewModel = canDefineMap.extend({seal: false}, {
     attachments.comment = changes.comment;
     attachments.urls.replace(changes.urls);
     attachments.files.replace(changes.files);
+    attribute.modified = true;
 
     canBatch.stop();
+
+    this.validateRequiredInfo(attribute);
+    this.rowData.isReadyToComplete = this.checkAssessmentReadinessToComplete();
+
+    pubSub.dispatch({
+      type: 'attributeModified',
+      assessmentData: this.rowData,
+    });
+  },
+  validateRequiredInfo(attribute) {
+    const {comment, attachment, url} = this.getRequiredInfoStates(attribute);
+    const attachments = attribute.attachments;
+
+    const hasValidComment = comment
+      ? attachments.comment !== null
+      : true;
+    const hasValidUrls = url
+      ? attachments.urls.length > 0
+      : true;
+    const hasValidFiles = attachment
+      ? attachments.files.length > 0
+      : true;
+
+    const hasValidAttachments = (
+      hasValidComment
+      && hasValidUrls
+      && hasValidFiles
+    );
+
+    attribute.validation.valid = hasValidAttachments;
+    attribute.validation.hasMissingInfo = !hasValidAttachments;
   },
 });
 
