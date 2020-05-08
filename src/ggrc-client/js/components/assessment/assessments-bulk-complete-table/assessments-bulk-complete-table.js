@@ -77,6 +77,7 @@ const ViewModel = canDefineMap.extend({seal: false}, {
             values: optionsList,
             config: optionsConfig,
           },
+          attachments: null,
           modified: false,
           validation: {
             mandatory: attribute.mandatory,
@@ -98,6 +99,8 @@ const ViewModel = canDefineMap.extend({seal: false}, {
         return value === '1';
       case 'date':
         return value || null;
+      case 'dropdown':
+        return value || '';
       case 'multiselect':
         return value || '';
       case 'person':

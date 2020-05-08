@@ -6,8 +6,10 @@
 import canComponent from 'can-component';
 import canDefineMap from 'can-define/map/map';
 import canStache from 'can-stache';
+import canBatch from 'can-event/batch/batch';
 import template from './assessments-bulk-complete-table-row.stache';
 import {getPlainText} from '../../../../plugins/ggrc-utils';
+import {ddValidationValueToMap} from '../../../../plugins/utils/ca-utils';
 
 const ViewModel = canDefineMap.extend({seal: false}, {
   rowData: {
@@ -22,10 +24,35 @@ const ViewModel = canDefineMap.extend({seal: false}, {
     }
 
     if (attribute.type === 'dropdown') {
-      return;
+      this.performDropdownValidation(attribute);
     } else {
       this.performDefaultValidation(attribute);
     }
+  },
+  performDropdownValidation(attribute) {
+    const {comment, attachment, url} = this.getRequiredInfoStates(attribute);
+    const requiresAttachment = comment || attachment || url;
+
+    canBatch.start();
+
+    const validation = attribute.validation;
+    validation.requiresAttachment = requiresAttachment;
+
+    if (requiresAttachment) {
+      attribute.attachments = {
+        comment: null,
+        files: [],
+        urls: [],
+      };
+      validation.valid = false;
+      validation.hasMissingInfo = true;
+    } else {
+      attribute.attachments = null;
+      validation.valid = validation.mandatory ? attribute.value !== '' : true;
+      validation.hasMissingInfo = false;
+    }
+
+    canBatch.stop();
   },
   performDefaultValidation(attribute) {
     let {type, value, validation} = attribute;
@@ -44,6 +71,11 @@ const ViewModel = canDefineMap.extend({seal: false}, {
     }
 
     validation.valid = !!(value);
+  },
+  getRequiredInfoStates(attribute) {
+    const optionBitmask = attribute.multiChoiceOptions.config
+      .get(attribute.value);
+    return ddValidationValueToMap(optionBitmask);
   },
   attributeValueChanged(value, index) {
     const attribute = this.rowData.attributes[index];
