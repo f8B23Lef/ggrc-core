@@ -58,7 +58,8 @@ const ViewModel = canDefineMap.extend({
   },
   isCompleteButtonEnabled: {
     get() {
-      return this.assessmentsCountsToComplete > 0;
+      return this.assessmentsCountsToComplete > 0
+      && !this.isBackgroundTaskInProgress;
     },
   },
   assessmentIdsToComplete: {
@@ -75,6 +76,9 @@ const ViewModel = canDefineMap.extend({
   },
   rowsData: {
     value: () => [],
+  },
+  isBackgroundTaskInProgress: {
+    value: false,
   },
   requiredInfoModal: {
     value: () => ({
@@ -110,6 +114,7 @@ const ViewModel = canDefineMap.extend({
       .then(({id}) => {
         if (id) {
           this.assessmentsCountsToComplete = 0;
+          this.isBackgroundTaskInProgress = true;
           this.trackBackgroundTask(id, COMPLETION_MESSAGES);
           this.cleanUpGridAfterCompletion();
         } else {
@@ -155,11 +160,13 @@ const ViewModel = canDefineMap.extend({
         }
       });
 
-      const assessmentAttributes = {
-        assessment: {id: asmtId, slug: asmtSlug},
-        values: attributesList,
-      };
-      attributesListToSave.push(assessmentAttributes);
+      if (attributesList.length || this.assessmentIdsToComplete.has(asmtId)) {
+        const assessmentAttributes = {
+          assessment: {id: asmtId, slug: asmtSlug},
+          values: attributesList,
+        };
+        attributesListToSave.push(assessmentAttributes);
+      }
     });
 
     return {
@@ -180,8 +187,13 @@ const ViewModel = canDefineMap.extend({
   },
   cleanUpGridAfterCompletion() {
     const rowsData = this.rowsData.filter(
-      (item) => !this.assessmentIdsToComplete.has(item.asmtId));
-
+      (item) => !this.assessmentIdsToComplete.has(item.asmtId))
+      .forEach((asmt) => {
+        asmt.attributes = asmt.attributes.attr().map((attr) => {
+          attr.modified = false;
+          return attr;
+        });
+      });
     if (!rowsData.length) {
       this.isGridEmpty = true;
     }
@@ -194,8 +206,14 @@ const ViewModel = canDefineMap.extend({
     const url = `/api/background_tasks/${taskId}`;
     trackStatus(
       url,
-      () => notifier('success', messages.success),
-      () => notifier('error', messages.fail));
+      () => {
+        notifier('success', messages.success);
+        this.isBackgroundTaskInProgress = false;
+      },
+      () => {
+        notifier('error', messages.fail);
+        this.isBackgroundTaskInProgress = false;
+      });
   },
   buildAsmtListRequest() {
     let relevant = null;
