@@ -39,6 +39,19 @@ const SAVE_ANSWERS_MESSAGES = {
    Please try to save them again.`,
 };
 
+/**
+ * Map of types from FE to BE format
+ */
+const attributesType = {
+  input: 'input',
+  text: 'text',
+  person: 'map:person',
+  date: 'date',
+  checkbox: 'checkbox',
+  multiselect: 'multiselect',
+  dropdown: 'dropdown',
+};
+
 const ViewModel = canDefineMap.extend({
   currentFilter: {
     value: null,
@@ -48,6 +61,9 @@ const ViewModel = canDefineMap.extend({
   },
   asmtListRequest: {
     value: null,
+  },
+  sortingInfo: {
+    value: () => {},
   },
   assessmentsList: {
     value: () => [],
@@ -145,6 +161,7 @@ const ViewModel = canDefineMap.extend({
       .then(({id}) => {
         if (id) {
           this.assessmentsCountsToComplete = 0;
+          this.isAttributeModified = false;
           this.isBackgroundTaskInProgress = true;
           this.trackBackgroundTask(id, COMPLETION_MESSAGES);
           this.cleanUpGridAfterCompletion();
@@ -183,7 +200,7 @@ const ViewModel = canDefineMap.extend({
               attribute.type,
               attribute.value),
             title: attribute.title,
-            type: attribute.type,
+            type: attributesType[attribute.type],
             definition_id: asmtId,
             id: attribute.id,
             extra,
@@ -211,6 +228,8 @@ const ViewModel = canDefineMap.extend({
     switch (type) {
       case 'checkbox':
         return value ? '1' : '0';
+      case 'person':
+        return value ? value.serialize() : [];
       case 'date':
         return value || '';
       default:
@@ -269,7 +288,13 @@ const ViewModel = canDefineMap.extend({
     }
     const filter =
       getFiltersForCompletion(this.currentFilter, relevant);
-    const param = buildParam('Assessment', {}, relevant, [], filter);
+    const page = {
+      sort: [{
+        key: this.sortingInfo.sortBy,
+        direction: this.sortingInfo.sortDirection,
+      }],
+    };
+    const param = buildParam('Assessment', page, relevant, [], filter);
     param.type = 'ids';
     this.asmtListRequest = param;
   },
